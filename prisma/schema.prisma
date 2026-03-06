@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+
+enum EntryForm {
+  word
+  phrase
+  idiom
+  question
+  not_sure
+}
+
+enum PartOfSpeech {
+  noun
+  verb
+  other
+}
+
+enum NounArticle {
+  der
+  die
+  das
+  plural
+  unknown
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entries Entry[]
+  tags    Tag[]
+}
+
+model Entry {
+  id             String    @id @default(cuid())
+  userId         String
+  term           String
+  termNormalized String
+  form           EntryForm @default(not_sure)
+  notes          String?
+
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  definitions Definition[]
+  primaryDefinitionId String? @unique
+  primaryDefinition Definition? @relation("PrimaryDefinition", fields: [primaryDefinitionId], references: [id], onDelete: SetNull)
+
+  entryTags   EntryTag[]
+
+// Undirected links (stored once as a canonical pair)
+  linksAsA EntryLink[] @relation("EntryLinkA") // As A - this entry is the first entry in the link
+  linksAsB EntryLink[] @relation("EntryLinkB") // As B - this entry is the second entry in the link
+
+//these @@index creates database indexes for the following fields - it's like a fast lookup path for the database
+  @@index([primaryDefinitionId]) //fast lookup for entries by primary definition id - quick primary definition view
+  @@index([userId, termNormalized]) //fast lookup for entries by user and normalized term - quick search view
+  @@index([userId, updatedAt]) //fast lookup for entries by user and updated at - quick last updated view
+  @@index([userId, deletedAt]) //fast lookup for entries by user and deleted at - quick trash bin view
+}
+
+model Definition {
+  id           String       @id @default(cuid())
+  entryId      String
+  translation  String
+  termOverride String?
+  notes        String?
+  partOfSpeech PartOfSpeech @default(other)
+  nounArticle  NounArticle?
+
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entry    Entry     @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  primaryFor Entry? @relation("PrimaryDefinition")
+  examples Example[]
+
+  @@index([entryId, deletedAt]) //fast lookup for definitions by entry and deleted at - quick trash bin view
+}
+
+model Example {
+  id           String   @id @default(cuid())
+  definitionId String
+  text         String
+  notes        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  definition Definition @relation(fields: [definitionId], references: [id], onDelete: Cascade)
+
+  @@index([definitionId])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  slug      String
+  color     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entryTags EntryTag[]
+
+  @@unique([userId, slug])
+  @@index([userId])
+}
+
+model EntryTag {
+  entryId String
+  tagId   String
+
+  entry Entry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([entryId, tagId])
+  @@index([tagId])
+}
+
+model EntryLink {
+  aEntryId String
+  bEntryId String
+  createdAt DateTime @default(now())
+
+  aEntry Entry @relation("EntryLinkA", fields: [aEntryId], references: [id], onDelete: Cascade)
+  bEntry Entry @relation("EntryLinkB", fields: [bEntryId], references: [id], onDelete: Cascade)
+
+  @@id([aEntryId, bEntryId])
+  @@index([bEntryId])
+}
