@@ -12,10 +12,12 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@prisma/adapter-better-sqlite3": "^7.4.2",
     "@prisma/client": "^7.4.2",
     "better-sqlite3": "^12.6.2",
     "next": "16.1.6",
+    "next-auth": "^5.0.0-beta.30",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

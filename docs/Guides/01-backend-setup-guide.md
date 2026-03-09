@@ -283,3 +283,93 @@ Key ideas:
 - route handlers use Prisma to **read and write data**
 
 ---
+
+# 11 — Seed the Database
+
+A seed file populates the database with realistic development data.
+
+The seed is not just for convenience — it is a design tool.
+It forces you to confront real data before the UI exists and exposes edge cases early.
+
+## Why seed data matters
+
+A good seed covers the full range of states the UI will need to handle:
+
+- a complete entry with definitions, examples, tags, and links
+- an incomplete entry (quick capture — term only, no definitions)
+- entries with multiple definitions
+- entries linked to other entries
+
+Without this range, UI problems stay hidden until late in development.
+
+## Install tsx
+
+The seed file runs as a standalone script outside of Next.js.
+`tsx` is used to execute it directly.
+
+```bash
+hnpm install -D tsx
+```
+
+## Configure the seed command
+
+In `prisma.config.ts`, add the seed command:
+
+````tsmigrations: {
+path: "prisma/migrations",
+seed: "tsx ./prisma/seed.ts",
+},
+
+## Create the seed file
+
+Create `prisma/seed.ts`.
+
+The seed file must instantiate its own Prisma client.
+It cannot use the shared singleton from `lib/prisma.ts` because it runs outside the Next.js runtime.
+
+Because Brezel uses the `better-sqlite3` adapter, every Prisma instantiation — including the seed — must configure the adapter explicitly:
+```ts
+import { PrismaClient } from '../src/generated/prisma/client'
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import * as dotenv from 'dotenv'dotenv.config()const adapter = new PrismaBetterSqlite3({
+url: process.env.DATABASE_URL!,
+})const prisma = new PrismaClient({ adapter })async function main() {
+// seed data here
+}main()
+.catch((e) => {
+console.error(e)
+process.exit(1)
+})
+.finally(async () => {
+await prisma.$disconnect()
+})
+````
+
+Note: `dotenv` must be imported manually because the seed runs outside Next.js, which normally handles environment variables automatically.
+
+## Important patterns
+
+**Always capture created records in variables.**
+You will need their `id` to set relations like `primaryDefinitionId` or to create `EntryLink` records.
+
+**Use `upsert` for reference data** (users, tags) so the seed can run multiple times safely.
+
+**Use `create` for entries and relations** — entries have no natural unique constraint to upsert on.
+
+**Set `primaryDefinitionId` in a separate update** after the entry is created, because of the circular reference between `Entry` and `Definition`.
+
+**Use `include: { definitions: true }` on entry creates** to get definition ids back in the response — without it, `definitions` is undefined on the returned object.
+
+## Run the seed
+
+```bash
+npx prisma db seed
+```
+
+To reset the database and reseed from scratch:
+
+```bash
+npx prisma migrate reset
+```
+
+This wipes the database, re-runs all migrations, and runs the seed automatically.
