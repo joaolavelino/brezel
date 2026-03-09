@@ -195,6 +195,86 @@ After a successful login, verify in Prisma Studio that rows were created in:
 
 ---
 
+8 — Include User ID in the Session
+
+By default NextAuth only includes `name`, `email`, and `image` in the session.
+The user `id` must be added explicitly via a callback.
+
+Update `src/auth.ts` to add the session callback:
+
+```ts
+callbacks: {
+  session({ session, user }) {
+    session.user.id = user.id
+    return session
+  },
+},
+```
+
+This runs after every session is created or accessed, and adds the database user `id` to the session object.
+
+---
+
+# 9 — Extend NextAuth Types
+
+TypeScript does not know about the `id` field by default.
+Create `src/types/next-auth.d.ts` to extend the session type:
+
+```ts
+import { DefaultSession } from "next-auth";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+    } & DefaultSession["user"];
+  }
+}
+```
+
+This uses **module augmentation** — a TypeScript feature that lets you extend types from external packages without modifying their source.
+
+`& DefaultSession["user"]` preserves the existing fields (`name`, `email`, `image`) and adds `id` on top.
+
+Without this file, accessing `session.user.id` in route handlers would produce a TypeScript error.
+
+---
+
+# 10 — Create a Session User Helper
+
+Route handlers need a consistent way to get the current user.
+Create `src/lib/get-session-user.ts`:
+
+```ts
+import { auth } from "@/auth";
+
+export async function getSessionUser() {
+  // DEV BYPASS — remove before production
+  if (process.env.NODE_ENV === "development" && process.env.DEV_USER_ID) {
+    return { id: process.env.DEV_USER_ID };
+  }
+
+  const session = await auth();
+  if (!session?.user?.id) return null;
+
+  return { id: session.user.id };
+}
+```
+
+Add to `.env`:
+
+```ts
+DEV_USER_ID = your_seed_user_id;
+```
+
+The `DEV_USER_ID` allows route testing in Postman or other tools without going through the OAuth flow. The bypass only activates in development and is dead code in production.
+
+Every protected route uses this helper:
+
+````ts
+const user = await getSessionUser()
+if (!user) return ApiError.unauthorized()
+
 # Mental Model
 
 ```bash
@@ -211,4 +291,8 @@ NextAuth receives confirmation
 Prisma adapter saves User, Account, Session to the database
         ↓
 User is authenticated
-```
+````
+
+Note: on the first login, NextAuth creates a new User and Account record.
+On subsequent logins, it finds the existing Account and reuses the User.
+The Session record is always recreated on each new login.
