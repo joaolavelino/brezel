@@ -1,95 +1,44 @@
-// import { NextResponse } from "next/server";
-// import { prisma } from "@/lib/prisma";
-// import { EntryForm } from "@/generated/prisma/client";
+import { ApiError } from "@/lib/errors/api-errors";
+import { getSessionUser } from "@/lib/get-session-user";
+import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
 
-// const DEV_USER_ID = "dev-user-id";
+export async function GET(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) return ApiError.unauthorized();
 
-// /**
-//  * Basic normalization for search.
-//  * We can improve this later if needed.
-//  */
-// function normalizeTerm(term: string) {
-//   return term
-//     .trim()
-//     .toLowerCase()
-//     .normalize("NFD")
-//     .replace(/\p{Diacritic}/gu, "");
-// }
+  const q = request.nextUrl.searchParams.get("q");
+  const tag = request.nextUrl.searchParams.get("tag");
 
-// export async function GET() {
-//   try {
-//     const entries = await prisma.entry.findMany({
-//       where: {
-//         userId: DEV_USER_ID,
-//         deletedAt: null,
-//       },
-//       orderBy: {
-//         updatedAt: "desc",
-//       },
-//       include: {
-//         primaryDefinition: true,
-//         _count: {
-//           select: {
-//             definitions: true,
-//             entryTags: true,
-//           },
-//         },
-//       },
-//     });
-
-//     return NextResponse.json(entries);
-//   } catch (error) {
-//     console.error("Failed to fetch entries:", error);
-
-//     return NextResponse.json(
-//       { error: "Failed to fetch entries." },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// export async function POST(request: Request) {
-//   try {
-//     const body = await request.json();
-
-//     const rawTerm =
-//       typeof body.term === "string" ? body.term.trim() : "";
-
-//     const notes =
-//       typeof body.notes === "string" && body.notes.trim().length > 0
-//         ? body.notes.trim()
-//         : null;
-
-//     const form =
-//       typeof body.form === "string" &&
-//       Object.values(EntryForm).includes(body.form as EntryForm)
-//         ? (body.form as EntryForm)
-//         : EntryForm.not_sure;
-
-//     if (!rawTerm) {
-//       return NextResponse.json(
-//         { error: "Term is required." },
-//         { status: 400 }
-//       );
-//     }
-
-//     const entry = await prisma.entry.create({
-//       data: {
-//         userId: DEV_USER_ID,
-//         term: rawTerm,
-//         termNormalized: normalizeTerm(rawTerm),
-//         form,
-//         notes,
-//       },
-//     });
-
-//     return NextResponse.json(entry, { status: 201 });
-//   } catch (error) {
-//     console.error("Failed to create entry:", error);
-
-//     return NextResponse.json(
-//       { error: "Failed to create entry." },
-//       { status: 500 }
-//     );
-//   }
-// }
+  try {
+    const entries = await prisma.entry.findMany({
+      where: {
+        userId: user.id,
+        deletedAt: null, //this will exclude soft-deleted entries
+        ...(q && {
+          //conditional - only happens if there is a query search param
+          OR: [
+            { termNormalized: { contains: q } },
+            { definitions: { some: { translation: { contains: q } } } },
+          ],
+        }),
+        ...(tag && {
+          //conditional - only happens if there is a tag search param
+          entryTags: {
+            some: { tag: { slug: tag } },
+          },
+        }),
+      },
+      include: {
+        primaryDefinition: true,
+        entryTags: {
+          include: { tag: true },
+        },
+      },
+    });
+    return Response.json({ data: entries });
+  } catch (error) {
+    console.error("GET /entries error:", error);
+    return ApiError.internal();
+  }
+}

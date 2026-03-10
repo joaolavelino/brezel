@@ -69,6 +69,7 @@ model Entry {
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   definitions Definition[]
+  
   primaryDefinitionId String? @unique
   primaryDefinition Definition? @relation("PrimaryDefinition", fields: [primaryDefinitionId], references: [id], onDelete: SetNull)
 
