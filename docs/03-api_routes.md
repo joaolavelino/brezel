@@ -152,6 +152,56 @@ Returns a single entry with all definitions, examples, and links.
 
 ---
 
+## POST /api/entries
+
+Creates a new entry for the authenticated user.
+
+### Request Body
+
+```json
+{
+  "term": "Fernweh",
+  "notes": "longing for distant places",
+  "form": "word",
+  "tags": ["tag-id-here"]
+}
+```
+
+| Field   | Type      | Required | Description                                                     |
+| ------- | --------- | -------- | --------------------------------------------------------------- |
+| `term`  | string    | Yes      | The term as encountered by the user                             |
+| `notes` | string    | No       | Personal notes about the term                                   |
+| `form`  | EntryForm | No       | word, phrase, idiom, question, not_sure. Defaults to `not_sure` |
+| `tags`  | string[]  | No       | Array of tag ids to attach. Defaults to `[]`                    |
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "cmmma7q4q0004n88z34moge2x",
+    "term": "Fernweh",
+    "termNormalized": "fernweh",
+    "form": "word",
+    "notes": "longing for distant places",
+    "deletedAt": null,
+    "primaryDefinitionId": null,
+    "createdAt": "2026-03-11T16:57:13.975Z",
+    "updatedAt": "2026-03-11T16:57:13.975Z"
+  }
+}
+```
+
+### Error Cases
+
+| Status | Code                    | When                              |
+| ------ | ----------------------- | --------------------------------- |
+| `401`  | `UNAUTHORIZED`          | No active session                 |
+| `400`  | `BAD_REQUEST`           | Invalid payload or duplicate term |
+| `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error           |
+
+---
+
 # Tags
 
 ## GET /api/tags

@@ -25,6 +25,7 @@ export async function GET(
         },
         linksAsA: { include: { bEntry: true } },
         linksAsB: { include: { aEntry: true } },
+        entryTags: { include: { tag: true } },
       },
     });
 
