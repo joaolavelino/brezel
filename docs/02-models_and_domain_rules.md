@@ -554,6 +554,21 @@ It reflects a process where:
 Because of that, the database is not only technically structured.
 It is shaped by the actual experience Brezel wants to support.
 
+## Term Normalization
+
+`termNormalized` is generated from `term` using the following rule:
+
+- lowercase
+- trim leading and trailing spaces
+- collapse multiple spaces into one
+- umlauts (ä, ö, ü) and eszett (ß) are preserved
+
+This means `schön` and `schon` are different normalized values and can coexist as separate entries.
+
+Changing this rule requires a data migration.
+
+The utility function lives at `src/lib/normalize-term.ts`.
+
 ---
 
 # Mental Model for Future Development

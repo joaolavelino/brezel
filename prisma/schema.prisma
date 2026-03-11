@@ -69,7 +69,7 @@ model Entry {
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   definitions Definition[]
-  
+
   primaryDefinitionId String? @unique
   primaryDefinition Definition? @relation("PrimaryDefinition", fields: [primaryDefinitionId], references: [id], onDelete: SetNull)
 
@@ -79,9 +79,9 @@ model Entry {
   linksAsA EntryLink[] @relation("EntryLinkA") // As A - this entry is the first entry in the link
   linksAsB EntryLink[] @relation("EntryLinkB") // As B - this entry is the second entry in the link
 
+  @@unique([userId, termNormalized]) //the same user can't have two entries with the same normalised fields
 //these @@index creates database indexes for the following fields - it's like a fast lookup path for the database
   @@index([primaryDefinitionId]) //fast lookup for entries by primary definition id - quick primary definition view
-  @@index([userId, termNormalized]) //fast lookup for entries by user and normalized term - quick search view
   @@index([userId, updatedAt]) //fast lookup for entries by user and updated at - quick last updated view
   @@index([userId, deletedAt]) //fast lookup for entries by user and deleted at - quick trash bin view
 }
