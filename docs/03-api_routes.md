@@ -202,6 +202,53 @@ Creates a new entry for the authenticated user.
 
 ---
 
+## PATCH /api/entries/:id
+
+Updates an existing entry for the authenticated user.
+
+All fields are optional. Only sent fields are updated.
+
+### URL Parameters
+
+| Parameter | Type   | Required | Description  |
+| --------- | ------ | -------- | ------------ |
+| `id`      | string | Yes      | The entry id |
+
+### Request Body
+
+```json
+{
+  "term": "laufen",
+  "form": "word",
+  "notes": "updated note",
+  "primaryDefinitionId": "def-id-here",
+  "tags": ["tag-id-1", "tag-id-2"]
+}
+```
+
+| Field                 | Type      | Required | Description                                                              |
+| --------------------- | --------- | -------- | ------------------------------------------------------------------------ |
+| `term`                | string    | No       | Updated term. Triggers normalization and duplicate check                 |
+| `form`                | EntryForm | No       | word, phrase, idiom, question, not_sure                                  |
+| `notes`               | string    | No       | Personal notes about the term                                            |
+| `primaryDefinitionId` | string    | No       | ID of the definition to set as primary. Must belong to this entry        |
+| `tags`                | string[]  | No       | Full desired tag state — replaces existing tags. Pass `[]` to remove all |
+
+### Response
+
+Returns the updated entry in the same shape as `GET /api/entries/:id`.
+
+### Error Cases
+
+| Status | Code                    | When                                                        |
+| ------ | ----------------------- | ----------------------------------------------------------- |
+| `401`  | `UNAUTHORIZED`          | No active session                                           |
+| `400`  | `BAD_REQUEST`           | Invalid payload, duplicate term, or invalid definition/tags |
+| `404`  | `NOT_FOUND`             | Entry doesn't exist or belongs to another user              |
+| `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error                                     |
+
+---
+
 # Tags
 
 ## GET /api/tags
