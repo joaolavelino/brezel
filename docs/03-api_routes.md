@@ -28,14 +28,15 @@ All errors follow this structure:
 
 ## GET /api/entries
 
-Returns all active entries for the authenticated user with primary definition and tags.
+Returns entries for the authenticated user. Defaults to active entries only.
 
 ### Query Parameters
 
-| Parameter | Type   | Required | Description                                       |
-| --------- | ------ | -------- | ------------------------------------------------- |
-| `q`       | string | No       | Search term — matches against term or translation |
-| `tag`     | string | No       | Filter by tag slug                                |
+| Parameter | Type   | Required | Description                                                                  |
+| --------- | ------ | -------- | ---------------------------------------------------------------------------- |
+| `q`       | string | No       | Search term — matches against term or translation                            |
+| `tag`     | string | No       | Filter by tag slug                                                           |
+| `status`  | string | No       | `deleted` — soft-deleted entries. `incomplete` — entries with no definitions |
 
 Query parameters are combinable. Search query is normalized before matching.
 
@@ -85,6 +86,16 @@ Query parameters are combinable. Search query is normalized before matching.
 | `GET /api/entries?q=laufen`           | Entries matching "laufen" in term or translation |
 | `GET /api/entries?tag=running`        | Entries tagged "running"                         |
 | `GET /api/entries?q=shoe&tag=running` | Combined filter                                  |
+| `GET /api/entries?status=deleted`     | Soft-deleted entries                             |
+| `GET /api/entries?status=incomplete`  | Entries with no definitions                      |
+
+### Error Cases
+
+| Status | Code                    | When                    |
+| ------ | ----------------------- | ----------------------- |
+| `401`  | `UNAUTHORIZED`          | No active session       |
+| `400`  | `BAD_REQUEST`           | Invalid status value    |
+| `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error |
 
 ---
 
@@ -246,6 +257,68 @@ Returns the updated entry in the same shape as `GET /api/entries/:id`.
 | `400`  | `BAD_REQUEST`           | Invalid payload, duplicate term, or invalid definition/tags |
 | `404`  | `NOT_FOUND`             | Entry doesn't exist or belongs to another user              |
 | `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error                                     |
+
+---
+
+## DELETE /api/entries/:id
+
+Soft-deletes an entry. Sets `deletedAt` to the current timestamp. The entry remains in the database and can be restored.
+
+### URL Parameters
+
+| Parameter | Type   | Required | Description  |
+| --------- | ------ | -------- | ------------ |
+| `id`      | string | Yes      | The entry id |
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "cmmmagb660006n88zfftefgen",
+    "term": "quelle"
+  }
+}
+```
+
+### Error Cases
+
+| Status | Code                    | When                                           |
+| ------ | ----------------------- | ---------------------------------------------- |
+| `401`  | `UNAUTHORIZED`          | No active session                              |
+| `404`  | `NOT_FOUND`             | Entry doesn't exist or belongs to another user |
+| `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error                        |
+
+---
+
+## PATCH /api/entries/:id/restore
+
+Restores a soft-deleted entry by clearing `deletedAt`.
+
+### URL Parameters
+
+| Parameter | Type   | Required | Description  |
+| --------- | ------ | -------- | ------------ |
+| `id`      | string | Yes      | The entry id |
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "cmmmagb660006n88zfftefgen",
+    "term": "quelle"
+  }
+}
+```
+
+### Error Cases
+
+| Status | Code                    | When                                            |
+| ------ | ----------------------- | ----------------------------------------------- |
+| `401`  | `UNAUTHORIZED`          | No active session                               |
+| `404`  | `NOT_FOUND`             | Entry doesn't exist, not deleted, or wrong user |
+| `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error                         |
 
 ---
 

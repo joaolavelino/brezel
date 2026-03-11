@@ -164,3 +164,37 @@ export async function PATCH(
     return ApiError.internal();
   }
 }
+
+//SOFT DELETE AN ENTRY
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getSessionUser();
+  if (!user) return ApiError.unauthorized();
+
+  const { id: entryId } = await params;
+
+  try {
+    const entry = await prisma.entry.findFirst({
+      where: {
+        userId: user.id,
+        id: entryId,
+        deletedAt: null,
+      },
+    });
+    if (!entry) return ApiError.notFound();
+
+    await prisma.entry.update({
+      where: { id: entryId },
+      data: { deletedAt: new Date() },
+    });
+
+    return Response.json({
+      data: { id: entryId, term: entry.term },
+    });
+  } catch (error) {
+    console.error("GET /entries error:", error);
+    return ApiError.internal();
+  }
+}

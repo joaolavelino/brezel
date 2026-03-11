@@ -13,6 +13,11 @@ export async function GET(request: NextRequest) {
 
   const q = request.nextUrl.searchParams.get("q");
   const tag = request.nextUrl.searchParams.get("tag");
+  const status = request.nextUrl.searchParams.get("status");
+
+  const validStatuses = ["deleted", "incomplete"];
+  if (status && !validStatuses.includes(status))
+    return ApiError.badRequest("incorrect-status-flag");
 
   const normalizedQ = q ? normalizeTerm(q) : null;
 
@@ -20,7 +25,7 @@ export async function GET(request: NextRequest) {
     const entries = await prisma.entry.findMany({
       where: {
         userId: user.id,
-        deletedAt: null, //this will exclude soft-deleted entries
+        deletedAt: status === "deleted" ? { not: null } : null, //this will exclude soft-deleted entries
         ...(normalizedQ && {
           //conditional - only happens if there is a query search param
           OR: [
@@ -35,6 +40,9 @@ export async function GET(request: NextRequest) {
           entryTags: {
             some: { tag: { slug: tag } },
           },
+        }),
+        ...(status === "incomplete" && {
+          definitions: { none: {} },
         }),
       },
       include: {
