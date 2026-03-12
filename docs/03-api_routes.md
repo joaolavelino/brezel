@@ -366,6 +366,50 @@ Creates a link between two entries. Links are undirected — order does not matt
 
 ---
 
+## DELETE /api/entries/:id/links
+
+Removes a link between two entries.
+
+### URL Parameters
+
+| Parameter | Type   | Required | Description         |
+| --------- | ------ | -------- | ------------------- |
+| `id`      | string | Yes      | The origin entry id |
+
+### Request Body
+
+```json
+{
+  "targetId": "cmmfcevt1000j788z3mp1lgew"
+}
+```
+
+| Field      | Type | Required | Description                        |
+| ---------- | ---- | -------- | ---------------------------------- |
+| `targetId` | cuid | Yes      | The id of the entry to unlink from |
+
+### Response
+
+```json
+{
+  "data": {
+    "term1": "laufen",
+    "term2": "laufschuh"
+  }
+}
+```
+
+### Error Cases
+
+| Status | Code                    | When                                                 |
+| ------ | ----------------------- | ---------------------------------------------------- |
+| `401`  | `UNAUTHORIZED`          | No active session                                    |
+| `400`  | `BAD_REQUEST`           | Invalid payload or self-link attempt                 |
+| `404`  | `NOT_FOUND`             | Link doesn't exist or entries belong to another user |
+| `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error                              |
+
+---
+
 # Tags
 
 ## GET /api/tags
