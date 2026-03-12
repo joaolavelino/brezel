@@ -16,6 +16,7 @@ export async function GET(
   if (!user) return ApiError.unauthorized();
 
   const { id: termId } = await params;
+  if (!z.cuid().safeParse(termId).success) return ApiError.badRequest();
 
   try {
     const entry = await prisma.entry.findFirst({
@@ -69,6 +70,7 @@ export async function PATCH(
 
   //2- Get the entry ID
   const { id: entryId } = await params;
+  if (!z.cuid().safeParse(entryId).success) return ApiError.badRequest();
 
   //3 - check payload format
   const body = await request.json();
@@ -158,7 +160,7 @@ export async function PATCH(
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      return ApiError.badRequest("You already have an entry for this term");
+      return ApiError.badRequest("entry-for-term-exists");
     }
     console.error("POST /entries error:", error);
     return ApiError.internal();
@@ -174,6 +176,8 @@ export async function DELETE(
   if (!user) return ApiError.unauthorized();
 
   const { id: entryId } = await params;
+  if (!z.cuid().safeParse(entryId).success)
+    return ApiError.badRequest("invalid-url");
 
   try {
     const entry = await prisma.entry.findFirst({

@@ -14,19 +14,16 @@
 
 ##Tags
 [x] GET - List tags
-[ ] POST - Create a tag
-[ ] PATCH - Edit a tag
-[ ] DELETE - Delete a tag (protected)
+[X] POST - Create a tag
+[X] PATCH - Edit a tag
+[X] DELETE - Delete a tag (cascade)
 
 ##Definitions
-[ ] GET - List definitions
 [ ] POST - Create a definition
 [ ] PATCH - Edit a definition
 [ ] DELETE - Delete a definition (cascade)
 
 ##Examples
-
-[ ] GET - List examples
 [ ] POST - Create a example
 [ ] PATCH - Edit a example
 [ ] DELETE - Delete a example (cascade)
