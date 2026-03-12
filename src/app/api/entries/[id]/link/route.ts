@@ -1,0 +1,63 @@
+import { ApiError } from "@/lib/errors/api-errors";
+import { getSessionUser } from "@/lib/get-session-user";
+import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
+import z from "zod";
+import { Prisma } from "@/generated/prisma/client";
+
+const CreateLinkSchema = z.object({
+  targetId: z.cuid(),
+});
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getSessionUser();
+  if (!user) return ApiError.unauthorized();
+  //get origin entry ID from the url
+  const { id: originId } = await params;
+
+  const body = await request.json();
+  const parsed = CreateLinkSchema.safeParse(body);
+  if (!parsed.success) return ApiError.badRequest();
+  const data = parsed.data;
+
+  if (data.targetId === originId)
+    return ApiError.badRequest("link-entry-itself");
+  console.log(data.targetId === originId);
+
+  const sortedIds = [originId, data?.targetId].sort();
+
+  try {
+    const entries = await prisma.entry.findMany({
+      where: {
+        userId: user.id,
+        deletedAt: null,
+        id: { in: sortedIds },
+      },
+    });
+
+    if (entries.length !== 2) return ApiError.notFound();
+
+    await prisma.entryLink.create({
+      data: {
+        aEntryId: sortedIds[0],
+        bEntryId: sortedIds[1],
+      },
+    });
+
+    return Response.json({
+      data: { term1: entries[0].term, term2: entries[1].term },
+    });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return ApiError.badRequest("link-already-exists");
+    }
+    console.error("POST /entries error:", error);
+    return ApiError.internal();
+  }
+}

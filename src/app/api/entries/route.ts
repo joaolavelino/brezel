@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      return ApiError.badRequest("You already have an entry for this term");
+      return ApiError.badRequest("entry-already-exists");
     }
     console.error("POST /entries error:", error);
     return ApiError.internal();

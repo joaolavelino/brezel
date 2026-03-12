@@ -322,6 +322,50 @@ Restores a soft-deleted entry by clearing `deletedAt`.
 
 ---
 
+## POST /api/entries/:id/links
+
+Creates a link between two entries. Links are undirected — order does not matter.
+
+### URL Parameters
+
+| Parameter | Type   | Required | Description         |
+| --------- | ------ | -------- | ------------------- |
+| `id`      | string | Yes      | The origin entry id |
+
+### Request Body
+
+```json
+{
+  "targetId": "cmmfcevt1000j788z3mp1lgew"
+}
+```
+
+| Field      | Type | Required | Description                    |
+| ---------- | ---- | -------- | ------------------------------ |
+| `targetId` | cuid | Yes      | The id of the entry to link to |
+
+### Response
+
+```json
+{
+  "data": {
+    "term1": "laufen",
+    "term2": "laufschuh"
+  }
+}
+```
+
+### Error Cases
+
+| Status | Code                    | When                                                       |
+| ------ | ----------------------- | ---------------------------------------------------------- |
+| `401`  | `UNAUTHORIZED`          | No active session                                          |
+| `400`  | `BAD_REQUEST`           | Invalid payload, self-link attempt, or link already exists |
+| `404`  | `NOT_FOUND`             | Either entry doesn't exist or belongs to another user      |
+| `500`  | `INTERNAL_SERVER_ERROR` | Unexpected server error                                    |
+
+---
+
 # Tags
 
 ## GET /api/tags
