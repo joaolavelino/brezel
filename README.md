@@ -48,6 +48,11 @@ Additional technical documentation can also be found in `/docs`.
 
 ---
 
+##Other documentation:
+
+- [**Api Routes**](/docs/api-docs/api-_index.md)
+- [**Domain Rules**](/docs/02-models_and_domain_rules.md)
+
 # Tech Stack (V1)
 
 Brezel is being built as a **full-stack learning project** exploring backend development and system design.
