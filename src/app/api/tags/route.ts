@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     ) {
       return ApiError.badRequest("tag-already-exists");
     }
-    console.error("POST /entries error:", error);
+    console.error("POST /tags error:", error);
     return ApiError.internal();
   }
 }

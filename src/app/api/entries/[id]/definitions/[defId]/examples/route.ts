@@ -35,7 +35,7 @@ export async function POST(
       where: {
         id: defId,
         entryId: entryId,
-        entry: { userId: user.id },
+        entry: { userId: user.id, deletedAt: null },
       },
     });
     if (!definition) return ApiError.notFound();
@@ -46,7 +46,7 @@ export async function POST(
 
     return Response.json({ data: example });
   } catch (error) {
-    console.error("POST /example error:", error);
+    console.error("POST .../examples error:", error);
     return ApiError.internal();
   }
 }

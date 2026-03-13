@@ -1,9 +1,9 @@
-import { apiError, ApiError } from "@/lib/errors/api-errors";
+import { Prisma } from "@/generated/prisma/client";
+import { ApiError } from "@/lib/errors/api-errors";
 import { getSessionUser } from "@/lib/get-session-user";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import z from "zod";
-import { Prisma } from "@/generated/prisma/client";
 
 const CreateLinkSchema = z.object({
   targetId: z.cuid(),
@@ -56,7 +56,7 @@ export async function POST(
     ) {
       return ApiError.badRequest("link-already-exists");
     }
-    console.error("POST /entries error:", error);
+    console.error("POST /entries/[id]/link error:", error);
     return ApiError.internal();
   }
 }
@@ -107,7 +107,7 @@ export async function DELETE(
       data: { term1: entryLink.aEntry.term, term2: entryLink.bEntry.term },
     });
   } catch (error) {
-    console.error("GET /entries error:", error);
+    console.error("DELETE /entries/[id]/link error:", error);
     return ApiError.internal();
   }
 }

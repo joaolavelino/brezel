@@ -41,7 +41,7 @@ export async function PATCH(
         definitionId: defId,
         definition: {
           entryId: entryId,
-          entry: { userId: user.id },
+          entry: { userId: user.id, deletedAt: null },
         },
       },
       data: data,
@@ -55,7 +55,7 @@ export async function PATCH(
     ) {
       return ApiError.notFound();
     }
-    console.error("PATCH /examples error:", error);
+    console.error("PATCH .../examples/[exId]  error:", error);
     return ApiError.internal();
   }
 }
@@ -83,7 +83,7 @@ export async function DELETE(
         definitionId: defId,
         definition: {
           entryId: entryId,
-          entry: { userId: user.id },
+          entry: { userId: user.id, deletedAt: null },
         },
       },
     });
@@ -96,7 +96,7 @@ export async function DELETE(
     ) {
       return ApiError.notFound();
     }
-    console.error("DELETE /examples error:", error);
+    console.error("DELETE .../examples/[exId] error:", error);
     return ApiError.internal();
   }
 }

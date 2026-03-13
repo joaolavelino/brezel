@@ -1,10 +1,10 @@
+import { Prisma } from "@/generated/prisma/client";
 import { NounArticle, PartOfSpeech } from "@/generated/prisma/enums";
-import { apiError, ApiError } from "@/lib/errors/api-errors";
+import { ApiError } from "@/lib/errors/api-errors";
 import { getSessionUser } from "@/lib/get-session-user";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import z from "zod";
-import { Prisma } from "@/generated/prisma/client";
 
 const UpdateDefinitionSchema = z
   .object({
@@ -70,7 +70,7 @@ export async function PATCH(
 
     return Response.json({ data: updated });
   } catch (error) {
-    console.error("PATCH /definitions error:", error);
+    console.error("PATCH .../definitions error:", error);
     return ApiError.internal();
   }
 }
@@ -108,7 +108,7 @@ export async function DELETE(
     ) {
       return ApiError.notFound();
     }
-    console.error("DELETE /definitions error:", error);
+    console.error("DELETE .../definitions error:", error);
     return ApiError.internal();
   }
 }

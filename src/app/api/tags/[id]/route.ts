@@ -68,7 +68,7 @@ export async function PATCH(
     ) {
       return ApiError.notFound();
     }
-    console.error("POST /entries error:", error);
+    console.error("PATCH /tags error:", error);
     return ApiError.internal();
   }
 }
@@ -103,7 +103,7 @@ export async function DELETE(
     ) {
       return ApiError.notFound();
     }
-    console.error("POST /entries error:", error);
+    console.error("DELETE /tags error:", error);
     return ApiError.internal();
   }
 }

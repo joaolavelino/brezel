@@ -60,7 +60,7 @@ export async function POST(
 
     return Response.json({ data: definition });
   } catch (error) {
-    console.error("GET /entries error:", error);
+    console.error("POST .../definitions error:", error);
     return ApiError.internal();
   }
 }

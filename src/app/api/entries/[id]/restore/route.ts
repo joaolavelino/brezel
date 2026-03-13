@@ -35,7 +35,7 @@ export async function PATCH(
       return ApiError.notFound();
     }
 
-    console.error("GET /entries error:", error);
+    console.error("PATCH /entries/[id]/restore error:", error);
     return ApiError.internal();
   }
 }

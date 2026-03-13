@@ -162,7 +162,7 @@ export async function PATCH(
     ) {
       return ApiError.badRequest("entry-for-term-exists");
     }
-    console.error("PATCH /entries error:", error);
+    console.error("PATCH /entries/[id] error:", error);
     return ApiError.internal();
   }
 }
@@ -198,7 +198,7 @@ export async function DELETE(
       data: { id: entryId, term: entry.term },
     });
   } catch (error) {
-    console.error("DELETE /entries error:", error);
+    console.error("DELETE /entries/[id] error:", error);
     return ApiError.internal();
   }
 }
