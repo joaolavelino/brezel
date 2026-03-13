@@ -16,6 +16,10 @@ const CreateDefinitionSchema = z
   .refine(
     (data) => data.partOfSpeech !== "noun" || data.nounArticle !== undefined,
     { message: "nounArticle is required when partOfSpeech is noun" }
+  )
+  .refine(
+    (data) => data.partOfSpeech === "noun" || data.nounArticle === undefined,
+    { message: "nounArticle is only valid when partOfSpeech is noun" }
   );
 
 export async function POST(

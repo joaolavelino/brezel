@@ -19,9 +19,9 @@
 [X] DELETE - Delete a tag (cascade)
 
 ##Definitions
-[ ] POST - Create a definition
-[ ] PATCH - Edit a definition
-[ ] DELETE - Delete a definition (cascade)
+[X] POST - Create a definition
+[X] PATCH - Edit a definition
+[X] DELETE - Delete a definition (cascade)
 
 ##Examples
 [ ] POST - Create a example
