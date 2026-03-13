@@ -24,9 +24,9 @@
 [X] DELETE - Delete a definition (cascade)
 
 ##Examples
-[ ] POST - Create a example
-[ ] PATCH - Edit a example
-[ ] DELETE - Delete a example (cascade)
+[X] POST - Create a example
+[X] PATCH - Edit a example
+[X] DELETE - Delete a example (cascade)
 
 ##User
 [ ] DELETE - Delete user
