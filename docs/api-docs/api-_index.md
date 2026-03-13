@@ -28,3 +28,4 @@ All errors follow this structure:
 - [Tags](./api-tags.md)
 - [Definitions](./api-definitions.md)
 - [Examples](./api-examples.md)
+- [Users](./api-users.md)
