@@ -22,17 +22,17 @@ export function apiError(
 
 // Shortcuts
 export const ApiError = {
-  notFound: (message = "Resource not found") =>
+  notFound: (message = "resource-not-found") =>
     apiError(404, "NOT_FOUND", message),
 
-  unauthorized: (message = "Authentication required") =>
+  unauthorized: (message = "authentication-required") =>
     apiError(401, "UNAUTHORIZED", message),
 
-  forbidden: (message = "Access denied") => apiError(403, "FORBIDDEN", message),
+  forbidden: (message = "access-denied") => apiError(403, "FORBIDDEN", message),
 
-  badRequest: (message = "Invalid request") =>
+  badRequest: (message = "invalid-request") =>
     apiError(400, "BAD_REQUEST", message),
 
-  internal: (message = "Something went wrong") =>
+  internal: (message = "something-went-wrong") =>
     apiError(500, "INTERNAL_SERVER_ERROR", message),
 };
