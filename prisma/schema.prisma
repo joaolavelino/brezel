@@ -46,6 +46,9 @@ model User {
   //next-auth fields
   emailVerified DateTime?
   image         String?
+  //basic settings
+  locale String @default("pt")
+  theme  String @default("system")
 
   entries Entry[]
   tags    Tag[]

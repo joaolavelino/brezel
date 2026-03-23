@@ -19,6 +19,8 @@ async function main() {
     create: {
       email: "dev@brezel.local",
       name: "Dev User",
+      locale: "pt",
+      theme: "system",
     },
   });
 
