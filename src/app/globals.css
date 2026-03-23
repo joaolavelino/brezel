@@ -156,6 +156,10 @@
   --color-destructive-contrast: var(--destructive-contrast);
   --color-success-contrast: var(--success-contrast);
   --color-warning-contrast: var(--warning-contrast);
+
+  --font-sans: var(--font-inter);
+  --font-brand: var(--font-inika);
+  --font-ipa: var(--font-gentium);
 }
 
 /* =========================

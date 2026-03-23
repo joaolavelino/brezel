@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Inter, Inika } from "next/font/google";
+import { Gentium_Book_Plus } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inika = Inika({
+  weight: ["400", "700"],
   subsets: ["latin"],
+  variable: "--font-inika",
+});
+
+const gentium = Gentium_Book_Plus({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-gentium",
 });
 
 export const metadata: Metadata = {
@@ -23,12 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`${inter.variable} ${inika.variable} ${gentium.variable}`}
+    >
+      <body>{children}</body>
     </html>
   );
 }
