@@ -1,26 +1,192 @@
 @import "tailwindcss";
 
+/* Dark mode por classe */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================
+   PRIMITIVAS
+========================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base neutras - light */
+  --primitive-base-light-100: #f5f5f4;
+  --primitive-base-light-150: #fcf7ef; /* watermark */
+  --primitive-base-light-200: #f5f0e8;
+  --primitive-base-light-300: #d4d2d0;
+  --primitive-base-light-400: #78716c;
+  --primitive-base-light-500: #44403c;
+  --primitive-base-light-600: #1c1917;
+
+  /* Base neutras - dark */
+  --primitive-base-dark-100: #101010;
+  --primitive-base-dark-150: #1d1c1c; /* watermark */
+  --primitive-base-dark-200: #181818;
+  --primitive-base-dark-300: #373634;
+  --primitive-base-dark-400: #ada39d;
+  --primitive-base-dark-500: #c7beb5;
+  --primitive-base-dark-600: #e1dad6;
+
+  /* Capture */
+  --primitive-purple-300: #ab90d4;
+  --primitive-purple-500: #633d98;
+  --primitive-purple-700: #302145;
+
+  /* Cerulean */
+  --primitive-cerulean-300: #3bb5dd;
+  --primitive-cerulean-500: #0094c6;
+  --primitive-cerulean-700: #0383ae;
+
+  /* Brown */
+  --primitive-brown-100: #e1d3c3;
+  --primitive-brown-500: #412b20;
+  --primitive-brown-550: #3a271e; /* watermark */
+
+  /* Feedback */
+  --primitive-red-500: #e16853;
+  --primitive-red-700: #a3493a;
+  --primitive-green-500: #48ae62;
+  --primitive-green-700: #429357;
+  --primitive-orange-500: #d38226;
+  --primitive-orange-700: #a46b2a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* =========================
+   TOKENS SEMÂNTICOS — LIGHT
+========================= */
+
+:root {
+  --surface-subtle: var(--primitive-base-light-100);
+  --surface-watermark: var(--primitive-base-light-150);
+  --surface: var(--primitive-base-light-200);
+  --surface-muted: var(--primitive-base-light-300);
+
+  --text-fixed-dark: var(--primitive-base-dark-300);
+  --text-fixed-light: var(--primitive-brown-100);
+  --text-light: var(--primitive-base-light-400);
+  --text-medium: var(--primitive-base-light-500);
+  --text: var(--primitive-base-light-600);
+
+  --primary-muted: var(--primitive-purple-300);
+  --primary: var(--primitive-purple-500);
+  --primary-contrast: var(--primitive-purple-700);
+
+  --secondary-muted: var(--primitive-cerulean-300);
+  --secondary: var(--primitive-cerulean-500);
+  --secondary-contrast: var(--primitive-cerulean-700);
+
+  --brand-foreground: var(--primitive-brown-100);
+  --brand-surface: var(--primitive-brown-500);
+  --brand-watermark: var(--primitive-brown-550);
+
+  --destructive: var(--primitive-red-500);
+  --destructive-contrast: var(--primitive-red-700);
+  --success: var(--primitive-green-500);
+  --success-contrast: var(--primitive-green-700);
+  --warning: var(--primitive-orange-500);
+  --warning-contrast: var(--primitive-orange-700);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* =========================
+   TOKENS SEMÂNTICOS — DARK
+========================= */
+
+.dark {
+  --surface-subtle: var(--primitive-base-dark-100);
+  --surface-watermark: var(--primitive-base-dark-150);
+  --surface: var(--primitive-base-dark-200);
+  --surface-muted: var(--primitive-base-dark-300);
+
+  --text-fixed-dark: var(--primitive-base-dark-300);
+  --text-fixed-light: var(--primitive-brown-100);
+  --text-light: var(--primitive-base-dark-400);
+  --text-medium: var(--primitive-base-dark-500);
+  --text: var(--primitive-base-dark-600);
+
+  --primary-muted: var(--primitive-purple-700);
+  --primary: var(--primitive-purple-500);
+  --primary-contrast: var(--primitive-purple-300);
+
+  --secondary-muted: var(--primitive-cerulean-700);
+  --secondary: var(--primitive-cerulean-500);
+  --secondary-contrast: var(--primitive-cerulean-300);
+
+  --brand-foreground: var(--primitive-brown-100);
+  --brand-surface: var(--primitive-brown-500);
+  --brand-watermark: var(--primitive-brown-550);
+
+  --destructive: var(--primitive-red-700);
+  --destructive-contrast: var(--primitive-red-500);
+  --success: var(--primitive-green-700);
+  --success-contrast: var(--primitive-green-500);
+  --warning: var(--primitive-orange-700);
+  --warning-contrast: var(--primitive-orange-500);
+}
+
+/* =========================
+   TAILWIND BRIDGE (@theme)
+========================= */
+
+@theme {
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-watermark: var(--surface-watermark);
+
+  --color-text: var(--text);
+  --color-text-medium: var(--text-medium);
+  --color-text-light: var(--text-light);
+  --color-text-fixed-dark: var(--text-fixed-dark);
+  --color-text-fixed-light: var(--text-fixed-light);
+
+  --color-primary: var(--primary);
+  --color-primary-muted: var(--primary-muted);
+  --color-primary-contrast: var(--primary-contrast);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-muted: var(--secondary-muted);
+  --color-secondary-contrast: var(--secondary-contrast);
+
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-watermark: var(--brand-watermark);
+
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-destructive-contrast: var(--destructive-contrast);
+  --color-success-contrast: var(--success-contrast);
+  --color-warning-contrast: var(--warning-contrast);
+}
+
+/* =========================
+   BASE GLOBAL
+========================= */
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--surface);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
