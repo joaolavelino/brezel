@@ -218,10 +218,6 @@
   --color-destructive-contrast: var(--destructive-contrast);
   --color-success-contrast: var(--success-contrast);
   --color-warning-contrast: var(--warning-contrast);
-
-  --font-sans: var(--font-inter);
-  --font-brand: var(--font-inika);
-  --font-ipa: var(--font-gentium);
 }
 
 /* =========================
@@ -236,6 +232,7 @@ body {
 body {
   background: var(--surface);
   color: var(--text);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -298,6 +295,10 @@ select {
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --font-sans: var(--font-inter);
+  --font-brand: var(--font-inika);
+  --font-ipa: var(--font-gentium);
 }
 
 @layer base {
@@ -305,7 +306,9 @@ select {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--font-sans);
   }
   html {
     @apply font-sans;

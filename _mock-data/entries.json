@@ -1,0 +1,188 @@
+[
+  {
+    "id": "cmmfcevsu0005788zzy72ybku",
+    "userId": "cmmfcevsd0000788zc6igja71",
+    "term": "laufen",
+    "termNormalized": "laufen",
+    "form": "word",
+    "notes": "One of those verbs that means different things depending on context.",
+    "deletedAt": null,
+    "createdAt": "2026-03-06T20:24:23.934Z",
+    "updatedAt": "2026-03-11T19:09:58.702Z",
+    "primaryDefinitionId": "cmmfcevsv0008788z1dyfw4j0",
+    "primaryDefinition": {
+      "id": "cmmfcevsv0008788z1dyfw4j0",
+      "entryId": "cmmfcevsu0005788zzy72ybku",
+      "translation": "complete jibberish",
+      "termOverride": "YATTAAAAAAAAAA",
+      "notes": null,
+      "partOfSpeech": "verb",
+      "nounArticle": null,
+      "deletedAt": null,
+      "createdAt": "2026-03-06T20:24:23.934Z",
+      "updatedAt": "2026-03-13T18:16:45.979Z"
+    },
+    "entryTags": [
+      {
+        "entryId": "cmmfcevsu0005788zzy72ybku",
+        "tagId": "cmmfcevsk0003788zv8g8qkiv",
+        "tag": {
+          "id": "cmmfcevsk0003788zv8g8qkiv",
+          "userId": "cmmfcevsd0000788zc6igja71",
+          "name": "Running",
+          "slug": "running",
+          "color": "#E25C4A",
+          "createdAt": "2026-03-06T20:24:23.924Z",
+          "updatedAt": "2026-03-06T20:24:23.924Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "cmmfcevsz000g788zrumgxxm0",
+    "userId": "cmmfcevsd0000788zc6igja71",
+    "term": "schuh",
+    "termNormalized": "schuh",
+    "form": "word",
+    "notes": "Normally used in the plural form Schuhe.",
+    "deletedAt": null,
+    "createdAt": "2026-03-06T20:24:23.939Z",
+    "updatedAt": "2026-03-06T20:24:23.940Z",
+    "primaryDefinitionId": "cmmfcevsz000h788zpbcz3lc9",
+    "primaryDefinition": {
+      "id": "cmmfcevsz000h788zpbcz3lc9",
+      "entryId": "cmmfcevsz000g788zrumgxxm0",
+      "translation": "shoe",
+      "termOverride": null,
+      "notes": null,
+      "partOfSpeech": "noun",
+      "nounArticle": "der",
+      "deletedAt": null,
+      "createdAt": "2026-03-06T20:24:23.939Z",
+      "updatedAt": "2026-03-06T20:24:23.939Z"
+    },
+    "entryTags": [
+      {
+        "entryId": "cmmfcevsz000g788zrumgxxm0",
+        "tagId": "cmmfcevsk0002788z96ii1ty0",
+        "tag": {
+          "id": "cmmfcevsk0002788z96ii1ty0",
+          "userId": "cmmfcevsd0000788zc6igja71",
+          "name": "clothes",
+          "slug": "clothes",
+          "color": null,
+          "createdAt": "2026-03-06T20:24:23.923Z",
+          "updatedAt": "2026-03-06T20:24:23.923Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "cmmfcevt1000j788z3mp1lgew",
+    "userId": "cmmfcevsd0000788zc6igja71",
+    "term": "laufschuh",
+    "termNormalized": "laufschuh",
+    "form": "word",
+    "notes": "Normally used in the plural form Laufschuhe. Saw on the shoe store.",
+    "deletedAt": null,
+    "createdAt": "2026-03-06T20:24:23.941Z",
+    "updatedAt": "2026-03-12T19:56:48.116Z",
+    "primaryDefinitionId": "cmmnw0eaw000dn88zh5je4lyz",
+    "primaryDefinition": {
+      "id": "cmmnw0eaw000dn88zh5je4lyz",
+      "entryId": "cmmfcevt1000j788z3mp1lgew",
+      "translation": "running shoe / joggers",
+      "termOverride": null,
+      "notes": "There are more specific words for other types of shows like Carbon-laufschuhe",
+      "partOfSpeech": "noun",
+      "nounArticle": "der",
+      "deletedAt": null,
+      "createdAt": "2026-03-12T19:55:09.800Z",
+      "updatedAt": "2026-03-12T19:55:09.800Z"
+    },
+    "entryTags": [
+      {
+        "entryId": "cmmfcevt1000j788z3mp1lgew",
+        "tagId": "cmmfcevsk0002788z96ii1ty0",
+        "tag": {
+          "id": "cmmfcevsk0002788z96ii1ty0",
+          "userId": "cmmfcevsd0000788zc6igja71",
+          "name": "clothes",
+          "slug": "clothes",
+          "color": null,
+          "createdAt": "2026-03-06T20:24:23.923Z",
+          "updatedAt": "2026-03-06T20:24:23.923Z"
+        }
+      },
+      {
+        "entryId": "cmmfcevt1000j788z3mp1lgew",
+        "tagId": "cmmfcevsk0003788zv8g8qkiv",
+        "tag": {
+          "id": "cmmfcevsk0003788zv8g8qkiv",
+          "userId": "cmmfcevsd0000788zc6igja71",
+          "name": "Running",
+          "slug": "running",
+          "color": "#E25C4A",
+          "createdAt": "2026-03-06T20:24:23.924Z",
+          "updatedAt": "2026-03-06T20:24:23.924Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "cmmfcevt3000k788zcabnrsj1",
+    "userId": "cmmfcevsd0000788zc6igja71",
+    "term": "sonst noch etwas?",
+    "termNormalized": "sonst noch etwas",
+    "form": "question",
+    "notes": "Heard it from a clerk at the bakery, after asking for the bread. I think it's something like 'Anything else'?",
+    "deletedAt": null,
+    "createdAt": "2026-03-06T20:24:23.943Z",
+    "updatedAt": "2026-03-06T20:24:23.943Z",
+    "primaryDefinitionId": null,
+    "primaryDefinition": null,
+    "entryTags": []
+  },
+  {
+    "id": "cmmma7q4q0004n88z34moge2x",
+    "userId": "cmmfcevsd0000788zc6igja71",
+    "term": "Fernweh",
+    "termNormalized": "fernweh",
+    "form": "word",
+    "notes": "longing for distant places",
+    "deletedAt": null,
+    "createdAt": "2026-03-11T16:57:13.975Z",
+    "updatedAt": "2026-03-11T16:57:13.975Z",
+    "primaryDefinitionId": null,
+    "primaryDefinition": null,
+    "entryTags": []
+  },
+  {
+    "id": "cmmmagb660006n88zfftefgen",
+    "userId": "cmmfcevsd0000788zc6igja71",
+    "term": "quelle",
+    "termNormalized": "quelle",
+    "form": "not_sure",
+    "notes": "huhuehueheueuhe",
+    "deletedAt": null,
+    "createdAt": "2026-03-11T17:03:54.509Z",
+    "updatedAt": "2026-03-12T10:23:25.599Z",
+    "primaryDefinitionId": null,
+    "primaryDefinition": null,
+    "entryTags": [
+      {
+        "entryId": "cmmmagb660006n88zfftefgen",
+        "tagId": "cmmfcevsl0004788zb4iwlmn5",
+        "tag": {
+          "id": "cmmfcevsl0004788zb4iwlmn5",
+          "userId": "cmmfcevsd0000788zc6igja71",
+          "name": "Music",
+          "slug": "music",
+          "color": null,
+          "createdAt": "2026-03-06T20:24:23.925Z",
+          "updatedAt": "2026-03-06T20:24:23.925Z"
+        }
+      }
+    ]
+  }
+]
