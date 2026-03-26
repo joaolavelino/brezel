@@ -3,10 +3,11 @@
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useMemo, useState } from "react";
 import { tagsMock } from "@/data/_mock-data/tags";
 import { entriesMock } from "@/data/_mock-data/entries";
 import { getContrastColor } from "@/lib/utils/getContrastColor";
+import { useEntrySearch } from "@/hooks/useEntrySearch";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SearchProps {
   isSearchMode: boolean;
@@ -20,30 +21,22 @@ export function SearchContent({
   enableSearchMode,
   disableSearchMode,
 }: SearchProps) {
-  const [query, setQuery] = useState("");
-  const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+  const {
+    query,
+    setQuery,
+    selectedTagId,
+    setSelectedTagId,
+    filteredEntries,
+    resetSearch,
+  } = useEntrySearch(entriesMock);
 
   //mock data
   const tags = tagsMock;
-  const entries = useMemo(() => [...entriesMock], []);
-
-  const filteredEntries = useMemo(() => {
-    const filteredByTag = selectedTagId
-      ? entries.filter((entry) =>
-          entry.entryTags.some((entryTag) => entryTag.tagId === selectedTagId)
-        )
-      : entries;
-    console.log(filteredByTag);
-
-    return query.length > 2
-      ? filteredByTag.filter((el) => el.term.includes(query))
-      : filteredByTag;
-  }, [entries, selectedTagId, query]);
 
   const selectedTag = tags.find((el) => el.id === selectedTagId);
 
   function closeSearch() {
-    setQuery("");
+    resetSearch();
     setSelectedTagId(null);
     disableSearchMode();
   }
@@ -122,20 +115,41 @@ export function SearchContent({
 
           {/* Result List */}
           <div className="space-y-2 overflow-auto flex-1 min-h-0">
-            {filteredEntries.map((entry) => (
-              <div key={entry.id} className="bg-surface-subtle p-2 rounded-md">
-                <h3 className="capitalize text-primary">{entry.term}</h3>
-                <p className="text-xs italic text-text-light">{entry.notes}</p>
-                {entry.primaryDefinition && (
-                  <div className="pt-1">
-                    <p className="text-xs ">Definiçao principal</p>
-                    <p className="text-sm">
-                      {entry.primaryDefinition?.translation}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
+            <AnimatePresence mode="popLayout">
+              {filteredEntries.map((entry) => (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.98,
+                    transition: { duration: 0.1 },
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 40,
+                    mass: 1,
+                  }}
+                  key={entry.id}
+                  className="bg-surface-subtle p-2 rounded-md border border-white/5"
+                >
+                  <h3 className="capitalize text-primary">{entry.term}</h3>
+                  <p className="text-xs italic text-text-light">
+                    {entry.notes}
+                  </p>
+                  {entry.primaryDefinition && (
+                    <div className="pt-1">
+                      <p className="text-xs ">Definiçao principal</p>
+                      <p className="text-sm">
+                        {entry.primaryDefinition?.translation}
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </div>
       )}
