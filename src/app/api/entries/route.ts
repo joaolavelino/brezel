@@ -50,6 +50,7 @@ export async function GET(request: NextRequest) {
         entryTags: {
           include: { tag: true },
         },
+        definitions: true,
       },
     });
     return Response.json({ data: entries });
