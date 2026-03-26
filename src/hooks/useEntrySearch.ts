@@ -13,11 +13,16 @@ export type EntrySearchItem = {
 export function useEntrySearch<T extends EntrySearchItem>(entries: T[]) {
   const [query, setQuery] = useState("");
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+  const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false);
 
   const filteredEntries = useMemo(() => {
+    const baseList = showOnlyIncomplete
+      ? entries.filter((e) => !e.definitions || e.definitions.length === 0)
+      : entries;
+
     const filteredByTag = !selectedTagId
-      ? entries
-      : entries.filter((el) =>
+      ? baseList
+      : baseList.filter((el) =>
           el.entryTags.some((et) => et.tagId === selectedTagId)
         );
 
@@ -44,7 +49,7 @@ export function useEntrySearch<T extends EntrySearchItem>(entries: T[]) {
     return [...filtered].sort((a, b) =>
       sortByRelevance(a.term, b.term, cleanQuery)
     );
-  }, [query, entries, selectedTagId]);
+  }, [query, entries, selectedTagId, showOnlyIncomplete]);
 
   return {
     query,
@@ -52,6 +57,8 @@ export function useEntrySearch<T extends EntrySearchItem>(entries: T[]) {
     selectedTagId,
     setSelectedTagId,
     filteredEntries,
+    showOnlyIncomplete,
+    setShowOnlyIncomplete,
     resetSearch: () => setQuery(""),
     hasResults: filteredEntries.length > 0,
   };

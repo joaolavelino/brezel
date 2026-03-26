@@ -28,7 +28,13 @@ export function SearchContent({
     setSelectedTagId,
     filteredEntries,
     resetSearch,
+    showOnlyIncomplete,
+    setShowOnlyIncomplete,
   } = useEntrySearch(entriesMock);
+
+  const incompleteEntriesAmount = entriesMock.filter(
+    (el) => el.definitions.length == 0
+  ).length;
 
   //mock data
   const tags = tagsMock;
@@ -74,6 +80,20 @@ export function SearchContent({
               </Button>
             </div>
           )}
+          {showOnlyIncomplete && (
+            <div className="flex gap-2 w-full items-center justify-between pt-2 text-destructive">
+              <p>Mostrando incompletas</p>
+              <Button
+                variant="link"
+                onClick={() => setShowOnlyIncomplete(false)}
+                size="xs"
+                className="text-destructive-contrast"
+              >
+                <X />
+                Mostrar todos
+              </Button>
+            </div>
+          )}
           {/* Tag filter */}
           <div className="space-y-2 py-4">
             {selectedTag ? (
@@ -109,6 +129,16 @@ export function SearchContent({
                     {tag.name}
                   </button>
                 ))}
+                <button
+                  onClick={() => setShowOnlyIncomplete(true)}
+                  className={`
+                     rounded-md border-2 text-destructive-contrast ${
+                       incompleteEntriesAmount > 0 &&
+                       "bg-destructive/50 border-destructive"
+                     }`}
+                >
+                  Incompletas({incompleteEntriesAmount})
+                </button>
               </div>
             )}
           </div>
