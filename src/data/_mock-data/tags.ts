@@ -1,3 +1,5 @@
+import { Tag } from "@/generated/prisma/client";
+
 export const tagsMock = [
   {
     id: "cmmfcevsk0002788z96ii1ty0",
@@ -44,4 +46,4 @@ export const tagsMock = [
     createdAt: "2026-03-06T20:24:23.920Z",
     updatedAt: "2026-03-06T20:24:23.920Z",
   },
-] as const;
+];

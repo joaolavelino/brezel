@@ -8,6 +8,8 @@ import { entriesMock } from "@/data/_mock-data/entries";
 import { getContrastColor } from "@/lib/utils/getContrastColor";
 import { useEntrySearch } from "@/hooks/useEntrySearch";
 import { motion, AnimatePresence } from "framer-motion";
+import { containerVariants, itemVariants } from "@/animations/staggered";
+import { SearchTagFilter } from "./SearchTagFilter";
 
 interface SearchProps {
   isSearchMode: boolean;
@@ -70,7 +72,7 @@ export function SearchContent({
         </div>
       )}
       {isSearchMode && (
-        <div className="flex flex-col flex-1 min-h-0">
+        <div className="flex flex-col flex-1 min-h-0 h-full">
           {query.length > 2 && (
             <div className="flex gap-2 w-full items-center justify-between pt-2">
               <p>Resultados para: {query}</p>
@@ -80,8 +82,8 @@ export function SearchContent({
               </Button>
             </div>
           )}
-          {showOnlyIncomplete && (
-            <div className="flex gap-2 w-full items-center justify-between pt-2 text-destructive">
+          {showOnlyIncomplete ? (
+            <div className="flex gap-2 w-full items-center justify-between pt-2 text-destructive text-sm">
               <p>Mostrando incompletas</p>
               <Button
                 variant="link"
@@ -93,94 +95,88 @@ export function SearchContent({
                 Mostrar todos
               </Button>
             </div>
-          )}
-          {/* Tag filter */}
-          <div className="space-y-2 py-4">
-            {selectedTag ? (
-              <button
-                className={`flex justify-center items-center gap-2 rounded-md p-2 w-full font-bold ${
-                  selectedTag.color
-                    ? getContrastColor(selectedTag.color)
-                    : "text-text-fixed-light"
-                }`}
-                style={{
-                  backgroundColor: selectedTag.color ?? "var(--text-light)",
-                }}
-                onClick={() => setSelectedTagId(null)}
-              >
-                <X />
-                {selectedTag.name}
-              </button>
-            ) : (
-              <div className="grid grid-cols-2 gap-1">
-                {tagsMock.map((tag) => (
-                  <button
-                    key={tag.id}
-                    className={`flex justify-center items-center rounded-md text-xs p-2 font-bold ${
-                      tag.color
-                        ? getContrastColor(tag.color)
-                        : "text-text-fixed-light"
-                    }`}
-                    style={{
-                      backgroundColor: tag.color ?? "var(--text-light)",
-                    }}
-                    onClick={() => setSelectedTagId(tag.id)}
-                  >
-                    {tag.name}
-                  </button>
-                ))}
-                <button
-                  onClick={() => setShowOnlyIncomplete(true)}
-                  className={`
-                     rounded-md border-2 text-destructive-contrast ${
-                       incompleteEntriesAmount > 0 &&
-                       "bg-destructive/50 border-destructive"
-                     }`}
-                >
-                  Incompletas({incompleteEntriesAmount})
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Result List */}
-          <div className="space-y-2 overflow-auto flex-1 min-h-0">
-            <AnimatePresence mode="popLayout">
-              {filteredEntries.map((entry) => (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.98,
-                    transition: { duration: 0.1 },
+          ) : (
+            <>
+              {incompleteEntriesAmount > 0 && (
+                <motion.button
+                  animate={{
+                    scaleX: [1, 1.02, 1],
                   }}
                   transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 40,
-                    mass: 1,
+                    duration: 0.5,
+                    repeat: Infinity,
+                    repeatDelay: 3,
+                    ease: "easeInOut",
                   }}
-                  key={entry.id}
-                  className="bg-surface-subtle p-2 rounded-md border border-white/5"
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowOnlyIncomplete(true)}
+                  className={`
+                     rounded-md border-2 text-destructive-contrast bg-destructive/20 border-destructive mt-2 p-1
+                     `}
+                  style={{ fontSize: "14px" }}
                 >
-                  <h3 className="capitalize text-primary">{entry.term}</h3>
-                  <p className="text-xs italic text-text-light">
-                    {entry.notes}
-                  </p>
-                  {entry.primaryDefinition && (
-                    <div className="pt-1">
-                      <p className="text-xs ">Definiçao principal</p>
-                      <p className="text-sm">
-                        {entry.primaryDefinition?.translation}
-                      </p>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
+                  Incompletas({incompleteEntriesAmount})
+                </motion.button>
+              )}
+            </>
+          )}
+          {/* Tag filter */}
+
+          <SearchTagFilter
+            onSelectTag={setSelectedTagId}
+            selectedTagId={selectedTagId}
+            tags={tagsMock}
+          />
+
+          {/* Result List */}
+          <motion.div
+            className="space-y-2 overflow-y-auto flex-1 min-h-0 relative "
+            variants={containerVariants}
+          >
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-2" // Mantém o espaçamento do Flex
+              >
+                {filteredEntries.map((entry) => (
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0.98,
+                      transition: { duration: 0.1 },
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 40,
+                      mass: 1,
+                    }}
+                    key={entry.id}
+                    variants={itemVariants}
+                    className="bg-surface-subtle p-2 rounded-md border border-white/5"
+                  >
+                    <h3 className="capitalize text-primary">{entry.term}</h3>
+                    <p className="text-xs italic text-text-light">
+                      {entry.notes}
+                    </p>
+                    {entry.primaryDefinition && (
+                      <div className="pt-1">
+                        <p className="text-xs ">Definiçao principal</p>
+                        <p className="text-sm">
+                          {entry.primaryDefinition?.translation}
+                        </p>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </motion.div>
             </AnimatePresence>
-          </div>
+          </motion.div>
         </div>
       )}
     </>
