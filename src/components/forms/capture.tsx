@@ -32,11 +32,30 @@ export function CaptureForm() {
         name="tags"
         control={control}
         render={({ field }) => (
-          <TagCombobox value={field.value} onChange={field.onChange} />
+          <TagCombobox
+            value={field.value}
+            onChange={field.onChange}
+            errorMessage={errors.tags?.message}
+          />
         )}
       />
 
-      <FieldWrapper inputId="term" label="Termo">
+      <FieldWrapper
+        inputId="term"
+        label="Termo"
+        errorMessage={errors.term?.message}
+      >
+        <Input
+          {...register("term")}
+          placeholder="O que você quer salvar hoje?"
+          className="bg-primary-muted text-text-fixed-dark"
+        />
+      </FieldWrapper>
+      <FieldWrapper
+        inputId="term"
+        label="Termo"
+        errorMessage="selecione apenas uma"
+      >
         <Input />
       </FieldWrapper>
     </form>

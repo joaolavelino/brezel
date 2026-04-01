@@ -19,9 +19,14 @@ import { AnimatePresence, motion } from "framer-motion";
 interface TagComboboxProps {
   value: Tag[];
   onChange: (tags: Tag[]) => void;
+  errorMessage?: string;
 }
 
-export function TagCombobox({ onChange, value }: TagComboboxProps) {
+export function TagCombobox({
+  onChange,
+  value,
+  errorMessage,
+}: TagComboboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -87,7 +92,7 @@ export function TagCombobox({ onChange, value }: TagComboboxProps) {
         <PopoverTrigger asChild>
           <Button
             disabled={isMaxReached}
-            className="w-full flex justify-between bg-primary-muted "
+            className="w-full flex justify-between bg-primary-muted text-text-fixed-dark"
           >
             Escolha {!isOpen ? <ChevronDown /> : <ChevronUp />}
           </Button>
@@ -132,6 +137,13 @@ export function TagCombobox({ onChange, value }: TagComboboxProps) {
           </Command>
         </PopoverContent>
       </Popover>
+      <div className="min-h-4">
+        {errorMessage && (
+          <p aria-live="polite" className="text-xs">
+            {errorMessage}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

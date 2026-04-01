@@ -14,12 +14,18 @@ export function FieldWrapper({
   inputId,
 }: FieldWrapperProps) {
   return (
-    <div>
-      <label htmlFor={inputId}>{label}</label>
+    <div className="flex flex-col items-start">
+      <label htmlFor={inputId} className="font-bold">
+        {label}
+      </label>
       {children}
-      <p className="min-h-1rem" aria-live="polite">
-        {errorMessage}
-      </p>
+      <div className="min-h-4">
+        {errorMessage && (
+          <p aria-live="polite" className="text-xs">
+            {errorMessage}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
