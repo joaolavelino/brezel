@@ -1,6 +1,7 @@
 import { Star, X } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { CaptureForm } from "../forms/capture";
 
 interface CaptureProps {
   isCaptureMode: boolean;
@@ -52,6 +53,7 @@ export function CaptureContent({
             <h1 className="font-brand font-bold text-2xl">Brezel</h1>
           </div>
           <h2 className="text-4xl font-bold">Nova Entrada</h2>
+          <CaptureForm />
           <Button variant="ghost" className="w-full" onClick={toggleCapture}>
             <X />
             Cancelar

@@ -7,8 +7,8 @@ export const tagsMock = [
     name: "clothes",
     slug: "clothes",
     color: null,
-    createdAt: "2026-03-06T20:24:23.923Z",
-    updatedAt: "2026-03-06T20:24:23.923Z",
+    createdAt: new Date("2026-03-06T20:24:23.923Z"),
+    updatedAt: new Date("2026-03-06T20:24:23.923Z"),
   },
   {
     id: "cmmfcevsl0004788zb4iwlmn5",
@@ -16,8 +16,8 @@ export const tagsMock = [
     name: "Music",
     slug: "music",
     color: null,
-    createdAt: "2026-03-06T20:24:23.925Z",
-    updatedAt: "2026-03-06T20:24:23.925Z",
+    createdAt: new Date("2026-03-06T20:24:23.925Z"),
+    updatedAt: new Date("2026-03-06T20:24:23.925Z"),
   },
   {
     id: "cmmfcevsk0003788zv8g8qkiv",
@@ -25,8 +25,8 @@ export const tagsMock = [
     name: "Running",
     slug: "running",
     color: "#E25C4A",
-    createdAt: "2026-03-06T20:24:23.924Z",
-    updatedAt: "2026-03-06T20:24:23.924Z",
+    createdAt: new Date("2026-03-06T20:24:23.924Z"),
+    updatedAt: new Date("2026-03-06T20:24:23.924Z"),
   },
   {
     id: "cmmnr6oa90008n88z6jd111th",
@@ -34,8 +34,8 @@ export const tagsMock = [
     name: "Tech and coding",
     slug: "tech-and-coding",
     color: "#87c468",
-    createdAt: "2026-03-12T17:40:04.592Z",
-    updatedAt: "2026-03-12T17:40:04.592Z",
+    createdAt: new Date("2026-03-12T17:40:04.592Z"),
+    updatedAt: new Date("2026-03-12T17:40:04.592Z"),
   },
   {
     id: "cmmfcevsi0001788zrt7qlsq8",
@@ -43,7 +43,7 @@ export const tagsMock = [
     name: "Travel",
     slug: "travel",
     color: "#4A90E2",
-    createdAt: "2026-03-06T20:24:23.920Z",
-    updatedAt: "2026-03-06T20:24:23.920Z",
+    createdAt: new Date("2026-03-06T20:24:23.920Z"),
+    updatedAt: new Date("2026-03-06T20:24:23.920Z"),
   },
 ];
