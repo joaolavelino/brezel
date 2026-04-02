@@ -19,14 +19,14 @@ export function Chip({
       }}
       style={{
         backgroundColor: color ? color : undefined,
-        color: color ? getContrastColor(color) : "white",
-        fontSize: "14px",
-        fontWeight: "bold",
+        color: color ? getContrastColor(color) : undefined,
+        fontSize: "12px",
+        fontWeight: "600",
       }}
-      className="rounded-xs px-2 py-0.5 text-xs bg-secondary text-text-fixed-light flex items-center font-bold capitalize gap-2A"
+      className="rounded-xs px-1 py-0.5 text-xs bg-secondary text-text-fixed-light flex items-center uppercase gap-1 tracking-wider"
     >
-      {name}
       {onDelete && <X size={12} fontWeight={10} />}
+      {name}
     </button>
   );
 }
