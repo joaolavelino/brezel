@@ -1,15 +1,28 @@
-import { FieldWrapper } from "../FieldWrapper";
-import { Input } from "../ui/input";
+import { entryFormLabels } from "@/constants/entries";
+import { entriesMock } from "@/data/_mock-data/entries";
+import { Prisma } from "@/generated/prisma/client";
+import { EntryForm } from "@/generated/prisma/enums";
+import { useDebouncer } from "@/hooks/useDebouncer";
+import { normalizeTerm } from "@/lib/normalize-term";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { AlertTriangle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
-import { EntryForm } from "@/generated/prisma/enums";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FieldWrapper } from "../FieldWrapper";
 import { TagCombobox } from "../TagCombobox";
-import { useEffect, useState } from "react";
-import { useDebouncer } from "@/hooks/useDebouncer";
-import { entriesMock } from "@/data/_mock-data/entries";
-import { Entry, Prisma } from "@/generated/prisma/client";
-import { normalizeTerm } from "@/lib/normalize-term";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import {
   Sheet,
   SheetContent,
@@ -18,11 +31,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../ui/sheet";
-import { AlertTriangle } from "lucide-react";
-import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
 
 const CreateEntrySchema = z.object({
-  term: z.string().min(1).trim(),
+  term: z.string().min(1, "Este campo não pode ser vazio").trim(),
   notes: z.string().optional(),
   form: z.enum(EntryForm).optional(),
   tags: z.array(z.any()),
@@ -62,9 +74,7 @@ export function CaptureForm() {
   useEffect(() => {
     if (debouncedTerm.length === 0) return;
     const duplicate = entries.find(
-      (el) =>
-        el.termNormalized === normalizeTerm(debouncedTerm) ||
-        el.term === normalizeTerm(debouncedTerm),
+      (el) => el.termNormalized === normalizeTerm(debouncedTerm),
     );
 
     if (duplicate) {
@@ -74,20 +84,28 @@ export function CaptureForm() {
     }
   }, [debouncedTerm, entries]);
 
+  const onSubmit = (data: CaptureFormDataType) => {
+    const tagsIds = data.tags.map((tag) => tag.id);
+    const payload = { ...data, tags: tagsIds };
+    console.log(payload);
+  };
+
   return (
     <>
-      <form className="w-full">
-        <Controller
-          name="tags"
-          control={control}
-          render={({ field }) => (
-            <TagCombobox
-              value={field.value}
-              onChange={field.onChange}
-              errorMessage={errors.tags?.message}
-            />
-          )}
-        />
+      <motion.form className="w-full" layout onSubmit={handleSubmit(onSubmit)}>
+        <FieldWrapper
+          label="Tags"
+          inputId="tags"
+          errorMessage={errors?.tags?.message}
+        >
+          <Controller
+            name="tags"
+            control={control}
+            render={({ field }) => (
+              <TagCombobox value={field.value} onChange={field.onChange} />
+            )}
+          />
+        </FieldWrapper>
 
         <FieldWrapper
           inputId="term"
@@ -95,19 +113,58 @@ export function CaptureForm() {
           errorMessage={errors.term?.message}
         >
           <Input
-            {...register("term")}
-            placeholder="O que você quer salvar hoje?"
             className="bg-primary-muted text-text-fixed-dark"
+            placeholder="O que você quer salvar hoje?"
+            {...register("term")}
           />
         </FieldWrapper>
         <FieldWrapper
-          inputId="term"
-          label="Termo"
-          errorMessage="selecione apenas uma"
+          inputId="form"
+          label="Formato"
+          errorMessage={errors.form?.message}
         >
-          <Input />
+          <Controller
+            name="form"
+            control={control}
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger className="w-full bg-primary-muted text-text-fixed-dark">
+                  <SelectValue placeholder="Escolha um formato" />
+                </SelectTrigger>
+                <SelectContent className="bg-surface-subtle">
+                  <SelectGroup>
+                    <SelectLabel>Selecione um</SelectLabel>
+                    {Object.entries(entryFormLabels).map(([value, label]) => (
+                      <SelectItem value={value} key={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
         </FieldWrapper>
-      </form>
+        <FieldWrapper
+          inputId="notes"
+          label="Anotações"
+          errorMessage={errors.notes?.message}
+        >
+          <Textarea
+            placeholder="Conte um pouco mais sobre esse termo..."
+            className="bg-primary-muted text-text-fixed-dark min-h-20 w-full"
+            rows={5}
+            {...register("notes")}
+          />
+        </FieldWrapper>
+        <Button
+          type="submit"
+          className="bg-primary-muted text-primary w-full rounded-full mt-20"
+          style={{ fontWeight: "bold" }}
+        >
+          Salvar entrada
+        </Button>
+      </motion.form>
       <Sheet
         open={!!duplicateEntry}
         onOpenChange={() => setDuplicateEntry(null)}

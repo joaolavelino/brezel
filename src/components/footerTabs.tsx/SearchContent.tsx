@@ -5,7 +5,6 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { tagsMock } from "@/data/_mock-data/tags";
 import { entriesMock } from "@/data/_mock-data/entries";
-import { getContrastColor } from "@/lib/utils/getContrastColor";
 import { useEntrySearch } from "@/hooks/useEntrySearch";
 import { motion, AnimatePresence } from "framer-motion";
 import { containerVariants, itemVariants } from "@/animations/staggered";
@@ -35,7 +34,7 @@ export function SearchContent({
   } = useEntrySearch(entriesMock);
 
   const incompleteEntriesAmount = entriesMock.filter(
-    (el) => el.definitions.length == 0
+    (el) => el.definitions.length == 0,
   ).length;
 
   //mock data

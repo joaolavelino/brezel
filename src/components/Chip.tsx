@@ -15,7 +15,7 @@ export function Chip({
       type="button"
       onClick={(e) => {
         e.stopPropagation();
-        onDelete && onDelete();
+        if (onDelete) onDelete();
       }}
       style={{
         backgroundColor: color ? color : undefined,

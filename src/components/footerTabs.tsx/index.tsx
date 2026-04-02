@@ -33,7 +33,7 @@ export function FooterTabs() {
   };
 
   return (
-    <div className="fixed w-full bottom-0">
+    <motion.div layout className="fixed w-full bottom-0">
       <AnimatePresence>
         {hasEntries && (
           <motion.div
@@ -45,16 +45,16 @@ export function FooterTabs() {
                 mode === "search"
                   ? "calc(100dvh - 80px)"
                   : mode === "capture"
-                  ? 0
-                  : "64px",
+                    ? 0
+                    : "64px",
               y: mode === "capture" ? "100%" : 0,
             }}
             className={`bg-surface-muted pt-2  rounded-t-4xl px-8 top-6 relative z-10 overflow-hidden flex flex-col ${
               mode === "search"
                 ? "pb-8"
                 : mode === "capture"
-                ? "pb-20"
-                : "pb-20 "
+                  ? "pb-20"
+                  : "pb-20 "
             }`}
           >
             <SearchContent
@@ -73,8 +73,8 @@ export function FooterTabs() {
               mode === "capture"
                 ? "calc(100dvh - 40px)"
                 : !hasEntries
-                ? "400px"
-                : "64px",
+                  ? "400px"
+                  : "64px",
             // Se NÃO tiver entries e estiver em modo null, ele dá um "pulse"
             scale: !hasEntries && mode === null ? [1, 1.01, 1] : 1,
           }}
@@ -103,6 +103,6 @@ export function FooterTabs() {
           />
         </motion.div>
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

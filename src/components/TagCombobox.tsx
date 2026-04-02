@@ -3,7 +3,7 @@ import { Tag } from "@/generated/prisma/client";
 import { useMemo, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { ChevronDown, ChevronUp, EraserIcon, X } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -19,14 +19,9 @@ import { AnimatePresence, motion } from "framer-motion";
 interface TagComboboxProps {
   value: Tag[];
   onChange: (tags: Tag[]) => void;
-  errorMessage?: string;
 }
 
-export function TagCombobox({
-  onChange,
-  value,
-  errorMessage,
-}: TagComboboxProps) {
+export function TagCombobox({ onChange, value }: TagComboboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -61,9 +56,9 @@ export function TagCombobox({
     !tags.some((t) => t.name.toLowerCase() === query.toLowerCase());
 
   return (
-    <div className="space-y-1">
-      <div className="flex gap-1 flex-wrap">
-        <AnimatePresence>
+    <motion.div className="space-y-1 w-full">
+      <motion.div className="flex gap-1 flex-wrap">
+        <AnimatePresence mode="popLayout">
           {value.map((el) => (
             <motion.div
               key={el.id}
@@ -87,7 +82,7 @@ export function TagCombobox({
             </motion.div>
           ))}
         </AnimatePresence>
-      </div>
+      </motion.div>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -100,16 +95,22 @@ export function TagCombobox({
 
         <PopoverContent>
           <Command>
-            <div className="flex items-center gap-4">
+            <motion.div className="flex items-center gap-4 w-full mb-2">
               <CommandInput
                 value={query}
                 placeholder="Pesquise por uma tag"
                 onValueChange={(value) => setQuery(value)}
               />
-              <Button variant="ghost" size="icon" onClick={() => setQuery("")}>
-                Limpar
-              </Button>
-            </div>
+              {query.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setQuery("")}
+                >
+                  <EraserIcon />
+                </Button>
+              )}
+            </motion.div>
             <CommandList className="space-y-2">
               <CommandEmpty>Nenhuma tag encontrada</CommandEmpty>
               <CommandGroup>
@@ -137,13 +138,6 @@ export function TagCombobox({
           </Command>
         </PopoverContent>
       </Popover>
-      <div className="min-h-4">
-        {errorMessage && (
-          <p aria-live="polite" className="text-xs">
-            {errorMessage}
-          </p>
-        )}
-      </div>
-    </div>
+    </motion.div>
   );
 }

@@ -2,6 +2,7 @@ import { Star, X } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { CaptureForm } from "../forms/capture";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface CaptureProps {
   isCaptureMode: boolean;
@@ -52,12 +53,25 @@ export function CaptureContent({
             </div>
             <h1 className="font-brand font-bold text-2xl">Brezel</h1>
           </div>
-          <h2 className="text-4xl font-bold">Nova Entrada</h2>
-          <CaptureForm />
-          <Button variant="ghost" className="w-full" onClick={toggleCapture}>
-            <X />
-            Cancelar
-          </Button>
+          <AnimatePresence>
+            <motion.div layout className="flex flex-col items-start w-full">
+              <h2 className="text-4xl font-bold">Nova Entrada</h2>
+              <motion.div
+                layout
+                className="flex flex-col mb-2  min-h-135 justify-end w-full"
+              >
+                <CaptureForm />
+              </motion.div>
+              <Button
+                variant="ghost"
+                className="w-full"
+                onClick={toggleCapture}
+              >
+                <X />
+                Cancelar
+              </Button>
+            </motion.div>
+          </AnimatePresence>
         </div>
       )}
     </>

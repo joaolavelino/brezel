@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { motion } from "framer-motion";
 
 interface FieldWrapperProps {
   inputId: string;
@@ -14,7 +15,7 @@ export function FieldWrapper({
   inputId,
 }: FieldWrapperProps) {
   return (
-    <div className="flex flex-col items-start">
+    <motion.div className="flex flex-col items-start w-full">
       <label htmlFor={inputId} className="font-bold">
         {label}
       </label>
@@ -26,6 +27,6 @@ export function FieldWrapper({
           </p>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
