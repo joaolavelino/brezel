@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-const CreateEntrySchema = z.object({
+export const CreateEntrySchema = z.object({
   term: z.string().min(1).trim(),
   notes: z.string().optional(),
   form: z.enum(EntryForm).optional(),

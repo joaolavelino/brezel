@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { CaptureForm } from "../forms/capture";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 interface CaptureProps {
   isCaptureMode: boolean;
@@ -15,6 +16,11 @@ export function CaptureContent({
   toggleCapture,
   hasEntries,
 }: CaptureProps) {
+  const [createdEntry, setCreatedEntry] = useState<{
+    term: string;
+    id: string;
+  } | null>(null);
+
   return (
     <>
       {!isCaptureMode ? (
@@ -54,23 +60,46 @@ export function CaptureContent({
             <h1 className="font-brand font-bold text-2xl">Brezel</h1>
           </div>
           <AnimatePresence>
-            <motion.div layout className="flex flex-col items-start w-full">
-              <h2 className="text-4xl font-bold">Nova Entrada</h2>
-              <motion.div
-                layout
-                className="flex flex-col mb-2  min-h-135 justify-end w-full"
-              >
-                <CaptureForm />
+            {!createdEntry ? (
+              <motion.div layout className="flex flex-col items-start w-full">
+                <h2 className="text-4xl font-bold">Nova Entrada</h2>
+                <motion.div
+                  layout
+                  className="flex flex-col mb-2  min-h-135 justify-end w-full"
+                >
+                  <CaptureForm />
+                </motion.div>
+                <Button
+                  variant="ghost"
+                  className="w-full"
+                  onClick={toggleCapture}
+                >
+                  <X />
+                  Cancelar
+                </Button>
               </motion.div>
-              <Button
-                variant="ghost"
-                className="w-full"
-                onClick={toggleCapture}
-              >
-                <X />
-                Cancelar
-              </Button>
-            </motion.div>
+            ) : (
+              <motion.div layout className="flex flex-col items-start w-full">
+                <h2 className="text-4xl font-bold">{createdEntry.term}</h2>
+                <p className="text-xl font-bold">
+                  foi salvo na sua biblioteca!
+                </p>
+                <motion.div
+                  layout
+                  className="flex flex-col mb-2  min-h-135 justify-end w-full"
+                >
+                  YAAAAY
+                </motion.div>
+                <Button
+                  variant="ghost"
+                  className="w-full"
+                  onClick={toggleCapture}
+                >
+                  <X />
+                  Cancelar
+                </Button>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       )}
