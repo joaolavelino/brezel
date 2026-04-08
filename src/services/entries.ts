@@ -1,7 +1,9 @@
 import { CreateEntrySchema } from "@/app/api/entries/route";
+import { Entry } from "@/generated/prisma/client";
+import { EntryListItem } from "@/types/entries";
 import z from "zod";
 
-export async function getEntries() {
+export async function getEntries(): Promise<EntryListItem[]> {
   const response = await fetch("/api/entries");
   const data = await response.json();
   if (!response.ok) {
@@ -12,7 +14,7 @@ export async function getEntries() {
 
 type CreateEntryPayload = z.infer<typeof CreateEntrySchema>;
 
-export async function createEntry(payload: CreateEntryPayload) {
+export async function createEntry(payload: CreateEntryPayload): Promise<Entry> {
   const response = await fetch("/api/entries", {
     method: "POST",
     headers: {
