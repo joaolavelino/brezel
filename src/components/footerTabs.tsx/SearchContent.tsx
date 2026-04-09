@@ -9,6 +9,8 @@ import { useEntrySearch } from "@/hooks/useEntrySearch";
 import { motion, AnimatePresence } from "framer-motion";
 import { containerVariants, itemVariants } from "@/animations/staggered";
 import { SearchTagFilter } from "./SearchTagFilter";
+import { useGetTags } from "@/hooks/Query/useTags";
+import { useGetEntries } from "@/hooks/Query/useEntries";
 
 interface SearchProps {
   isSearchMode: boolean;
@@ -22,6 +24,7 @@ export function SearchContent({
   enableSearchMode,
   disableSearchMode,
 }: SearchProps) {
+  const { data: entries = [] } = useGetEntries();
   const {
     query,
     setQuery,
@@ -31,16 +34,13 @@ export function SearchContent({
     resetSearch,
     showOnlyIncomplete,
     setShowOnlyIncomplete,
-  } = useEntrySearch(entriesMock);
+  } = useEntrySearch(entries);
 
-  const incompleteEntriesAmount = entriesMock.filter(
+  const incompleteEntriesAmount = entries.filter(
     (el) => el.definitions.length == 0,
   ).length;
 
-  //mock data
-  const tags = tagsMock;
-
-  const selectedTag = tags.find((el) => el.id === selectedTagId);
+  const { data: tags = [] } = useGetTags();
 
   function closeSearch() {
     resetSearch();
@@ -124,7 +124,7 @@ export function SearchContent({
           <SearchTagFilter
             onSelectTag={setSelectedTagId}
             selectedTagId={selectedTagId}
-            tags={tagsMock}
+            tags={tags}
           />
 
           {/* Result List */}
