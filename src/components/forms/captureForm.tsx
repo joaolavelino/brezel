@@ -33,6 +33,7 @@ import {
 } from "../ui/sheet";
 import { Textarea } from "../ui/textarea";
 import { useCreateEntry, useGetEntries } from "@/hooks/Query/useEntries";
+import { toast } from "sonner";
 
 const CreateEntrySchema = z.object({
   term: z.string().min(1, "Este campo não pode ser vazio").trim(),
@@ -91,9 +92,19 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
   }, [debouncedTerm, entries]);
 
   const onSubmit = (data: CaptureFormDataType) => {
+    console.log(data, errors);
     const tagsIds = data.tags.map((tag) => tag.id);
     const payload = { ...data, tags: tagsIds };
-    createEntry(payload);
+    createEntry(payload, {
+      onError: (error) => {
+        const message =
+          error.message === "Failed to fetch"
+            ? "Sem conexão. Verifique a sua rede de internet e tente novamente."
+            : error.message;
+        toast.error(message);
+      },
+      onSuccess: handleSuccess,
+    });
   };
 
   return (
@@ -167,6 +178,8 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
           type="submit"
           className="bg-primary-muted text-primary w-full rounded-full mt-20"
           style={{ fontWeight: "bold" }}
+          onClick={() => console.log("button is clicked", isPending)}
+          disabled={isPending}
         >
           Salvar entrada
         </Button>

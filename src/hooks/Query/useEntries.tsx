@@ -6,6 +6,7 @@ export function useCreateEntry() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: queryKeys.entries.all,
     mutationFn: createEntry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.entries.all });

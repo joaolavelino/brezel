@@ -25,6 +25,11 @@ export function CaptureContent({
   const handleCreateSuccess = (entry: Entry) =>
     setCreatedEntry({ id: entry.id, term: entry.term });
 
+  const handleClose = () => {
+    setCreatedEntry(null);
+    toggleCapture();
+  };
+
   return (
     <>
       {!isCaptureMode ? (
@@ -99,7 +104,7 @@ export function CaptureContent({
                 <Button
                   variant="ghost"
                   className="w-full"
-                  onClick={toggleCapture}
+                  onClick={handleClose}
                 >
                   <X />
                   Cancelar

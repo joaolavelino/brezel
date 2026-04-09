@@ -1,16 +1,14 @@
 "use client";
 
+import { containerVariants, itemVariants } from "@/animations/staggered";
+import { useGetEntries } from "@/hooks/Query/useEntries";
+import { useGetTags } from "@/hooks/Query/useTags";
+import { useEntrySearch } from "@/hooks/useEntrySearch";
+import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { tagsMock } from "@/data/_mock-data/tags";
-import { entriesMock } from "@/data/_mock-data/entries";
-import { useEntrySearch } from "@/hooks/useEntrySearch";
-import { motion, AnimatePresence } from "framer-motion";
-import { containerVariants, itemVariants } from "@/animations/staggered";
 import { SearchTagFilter } from "./SearchTagFilter";
-import { useGetTags } from "@/hooks/Query/useTags";
-import { useGetEntries } from "@/hooks/Query/useEntries";
 
 interface SearchProps {
   isSearchMode: boolean;

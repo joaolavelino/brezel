@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter, Inika } from "next/font/google";
 import { Gentium_Book_Plus } from "next/font/google";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,9 +37,12 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${inika.variable} ${gentium.variable}`}
     >
-      <QueryProvider>
-        <body>{children}</body>
-      </QueryProvider>
+      <body>
+        <QueryProvider>
+          <Toaster position="top-right" />
+          {children}
+        </QueryProvider>
+      </body>
     </html>
   );
 }
