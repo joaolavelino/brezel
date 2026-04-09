@@ -1,6 +1,6 @@
 import { entryFormLabels } from "@/constants/entries";
-import { entriesMock } from "@/data/_mock-data/entries";
-import { Prisma } from "@/generated/prisma/client";
+
+import { Entry, Prisma } from "@/generated/prisma/client";
 import { EntryForm } from "@/generated/prisma/enums";
 import { useDebouncer } from "@/hooks/useDebouncer";
 import { normalizeTerm } from "@/lib/normalize-term";
@@ -32,6 +32,7 @@ import {
   SheetTitle,
 } from "../ui/sheet";
 import { Textarea } from "../ui/textarea";
+import { useCreateEntry, useGetEntries } from "@/hooks/Query/useEntries";
 
 const CreateEntrySchema = z.object({
   term: z.string().min(1, "Este campo não pode ser vazio").trim(),
@@ -51,7 +52,11 @@ type EntryWithRelations = Prisma.EntryGetPayload<{
   };
 }>;
 
-export function CaptureForm() {
+interface CaptureFormProps {
+  handleSuccess: (entry: Entry) => void;
+}
+
+export function CaptureForm({ handleSuccess }: CaptureFormProps) {
   const [duplicateEntry, setDuplicateEntry] =
     useState<EntryWithRelations | null>(null);
   const { control, register, handleSubmit, watch, formState } =
@@ -65,7 +70,8 @@ export function CaptureForm() {
     });
   const { errors, isSubmitting } = formState;
 
-  const entries: EntryWithRelations[] = entriesMock;
+  const { data: entries = [] } = useGetEntries();
+  const { mutate: createEntry, isPending } = useCreateEntry();
 
   const termValue = watch("term");
 
@@ -87,7 +93,7 @@ export function CaptureForm() {
   const onSubmit = (data: CaptureFormDataType) => {
     const tagsIds = data.tags.map((tag) => tag.id);
     const payload = { ...data, tags: tagsIds };
-    console.log(payload);
+    createEntry(payload);
   };
 
   return (

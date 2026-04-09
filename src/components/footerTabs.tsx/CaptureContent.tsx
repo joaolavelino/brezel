@@ -1,9 +1,10 @@
 import { Star, X } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { CaptureForm } from "../forms/capture";
+import { CaptureForm } from "../forms/captureForm";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { Entry } from "@/generated/prisma/client";
 
 interface CaptureProps {
   isCaptureMode: boolean;
@@ -20,6 +21,9 @@ export function CaptureContent({
     term: string;
     id: string;
   } | null>(null);
+
+  const handleCreateSuccess = (entry: Entry) =>
+    setCreatedEntry({ id: entry.id, term: entry.term });
 
   return (
     <>
@@ -67,7 +71,9 @@ export function CaptureContent({
                   layout
                   className="flex flex-col mb-2  min-h-135 justify-end w-full"
                 >
-                  <CaptureForm />
+                  <CaptureForm
+                    handleSuccess={(entry: Entry) => handleCreateSuccess(entry)}
+                  />
                 </motion.div>
                 <Button
                   variant="ghost"

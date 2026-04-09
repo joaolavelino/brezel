@@ -1,4 +1,3 @@
-import { tagsMock } from "@/data/_mock-data/tags";
 import { Tag } from "@/generated/prisma/client";
 import { useMemo, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -15,6 +14,7 @@ import {
 } from "./ui/command";
 import { Chip } from "./Chip";
 import { AnimatePresence, motion } from "framer-motion";
+import { useGetTags } from "@/hooks/Query/useTags";
 
 interface TagComboboxProps {
   value: Tag[];
@@ -25,7 +25,7 @@ export function TagCombobox({ onChange, value }: TagComboboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
 
-  const tags = tagsMock;
+  const { data: tags = [] } = useGetTags();
 
   const maxTagAmount = 5;
   const isMaxReached = value.length >= maxTagAmount;
