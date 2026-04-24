@@ -5,5 +5,7 @@ export type EntryListItem = Prisma.EntryGetPayload<{
     primaryDefinition: true;
     entryTags: { include: { tag: true } };
     definitions: true;
+    linksAsA: { include: { bEntry: true } };
+    linksAsB: { include: { aEntry: true } };
   };
 }>;

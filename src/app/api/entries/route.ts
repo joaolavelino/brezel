@@ -51,8 +51,11 @@ export async function GET(request: NextRequest) {
           include: { tag: true },
         },
         definitions: true,
+        linksAsA: { include: { bEntry: true } },
+        linksAsB: { include: { aEntry: true } },
       },
     });
+
     return Response.json({ data: entries });
   } catch (error) {
     console.error("GET /entries error:", error);

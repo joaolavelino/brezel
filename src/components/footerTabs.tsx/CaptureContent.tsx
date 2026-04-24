@@ -5,6 +5,7 @@ import { CaptureForm } from "../forms/captureForm";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { Entry } from "@/generated/prisma/client";
+import { CaptureConfirm } from "./CaptureConfirm";
 
 interface CaptureProps {
   isCaptureMode: boolean;
@@ -20,7 +21,7 @@ export function CaptureContent({
   const [createdEntry, setCreatedEntry] = useState<{
     term: string;
     id: string;
-  } | null>(null);
+  } | null>({ term: "Netzwerk", id: "cmmfcevsu0005788zzy72ybku" });
 
   const handleCreateSuccess = (entry: Entry) =>
     setCreatedEntry({ id: entry.id, term: entry.term });
@@ -91,16 +92,10 @@ export function CaptureContent({
               </motion.div>
             ) : (
               <motion.div layout className="flex flex-col items-start w-full">
-                <h2 className="text-4xl font-bold">{createdEntry.term}</h2>
-                <p className="text-xl font-bold">
-                  foi salvo na sua biblioteca!
-                </p>
-                <motion.div
-                  layout
-                  className="flex flex-col mb-2  min-h-135 justify-end w-full"
-                >
-                  YAAAAY
-                </motion.div>
+                <CaptureConfirm
+                  entryId={createdEntry.id}
+                  handleClose={() => {}}
+                />
                 <Button
                   variant="ghost"
                   className="w-full"
