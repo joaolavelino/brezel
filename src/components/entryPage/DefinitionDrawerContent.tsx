@@ -11,6 +11,8 @@ import { useState } from "react";
 import { Example } from "@/generated/prisma/client";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { DefinitionForm } from "../forms/DefinitionForm";
+import { useSetPrimaryDefinition } from "@/hooks/Query/useEntries";
+import { toast } from "sonner";
 
 interface DefinitionDrawerContentProps {
   definition: CompleteDefinition | null;
@@ -70,21 +72,51 @@ export const DefinitionDrawerContent = ({
 
   const formTitleCard = !!definition ? "Editar definição" : "Criar definição";
 
+  const showExampleSection = !!definition && !showDefinitionForm;
+
+  const { mutate: setPrimaryDefinition, isPending } = useSetPrimaryDefinition(
+    entry.id,
+  );
+
+  const setPrimary = (definitionId: string, entryId: string) => {
+    setPrimaryDefinition(
+      { definitionId, entryId },
+      {
+        onError: (error) => {
+          const message =
+            error.message === "Failed to fetch"
+              ? "Sem conexão. Verifique a sua rede de internet e tente novamente."
+              : error.message;
+          toast.error(message);
+        },
+        onSuccess: () =>
+          toast.success(
+            "Entrada atualizada. Nova definição principal escolhida!",
+          ),
+      },
+    );
+  };
+
   return (
     <div className="space-y-4">
-      <section>
-        {isPrimary ? (
-          <div className="flex gap-2 border-2 border-surface-muted p-2 py-1.5 items-center justify-center rounded-full">
-            <Star className="fill-secondary text-transparent" size={18} />
-            <p className="">Esta é a definição principal da entrada!</p>
-          </div>
-        ) : (
-          <Button className="rounded-full w-full">
-            <Star />
-            Fixar esta como definição principal
-          </Button>
-        )}
-      </section>
+      {definition && (
+        <section>
+          {isPrimary ? (
+            <div className="flex gap-2 border-2 border-surface-muted p-2 py-1.5 items-center justify-center rounded-full">
+              <Star className="fill-secondary text-transparent" size={18} />
+              <p className="">Esta é a definição principal da entrada!</p>
+            </div>
+          ) : (
+            <Button
+              className="rounded-full w-full"
+              onClick={() => setPrimary(definition.id, entry.id)}
+            >
+              <Star />
+              Fixar esta como definição principal
+            </Button>
+          )}
+        </section>
+      )}
       <Card className="p-4 gap-2">
         <CardHeader className="p-0">
           <CardTitle>
@@ -122,7 +154,7 @@ export const DefinitionDrawerContent = ({
         </CardContent>
       </Card>
 
-      {!!definition && (
+      {showExampleSection && (
         <section>
           <header className="flex justify-between items-center">
             <h3 className="flex gap-1 items-center text-primary font-bold">

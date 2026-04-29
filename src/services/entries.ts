@@ -34,3 +34,20 @@ export async function getEntry(id: string): Promise<EntryDetail> {
   if (!response.ok) throw new Error(data.message);
   return data.data;
 }
+
+export async function setPrimaryDefinition(payload: {
+  entryId: string;
+  definitionId: string;
+}): Promise<Entry> {
+  const response = await fetch(`/api/entries/${payload.entryId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ primaryDefinitionId: payload.definitionId }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+  return data.data;
+}
