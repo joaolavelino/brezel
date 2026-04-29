@@ -5,7 +5,6 @@ import { useCreateEntry, useGetEntries } from "@/hooks/Query/useEntries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import z from "zod";
 import { FieldWrapper } from "../FieldWrapper";
 import { Button } from "../ui/button";
@@ -20,6 +19,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { CompleteDefinition } from "@/types/entries";
 
 const DefinitionSchema = z
   .object({
@@ -45,12 +45,17 @@ const DefinitionSchema = z
 
 type DefinitionFormType = z.infer<typeof DefinitionSchema>;
 
-interface CaptureFormProps {
-  handleSuccess: (entry: Entry) => void;
-  definition?: Definition;
+interface DefinitionFormProps {
+  handleSuccess: (definition: CompleteDefinition) => void;
+  definition?: Definition | null;
+  onClose: () => void;
 }
 
-export function CaptureForm({ handleSuccess, definition }: CaptureFormProps) {
+export function DefinitionForm({
+  handleSuccess,
+  definition,
+  onClose,
+}: DefinitionFormProps) {
   const { control, register, handleSubmit, watch, formState } =
     useForm<DefinitionFormType>({
       resolver: zodResolver(DefinitionSchema),
@@ -68,7 +73,6 @@ export function CaptureForm({ handleSuccess, definition }: CaptureFormProps) {
 
   const isNoun = partOfSpeechFormValue === "noun";
 
-  const { data: entries = [] } = useGetEntries();
   const { mutate: createEntry, isPending } = useCreateEntry();
 
   const onSubmit = (data: DefinitionFormType) => {
@@ -84,15 +88,15 @@ export function CaptureForm({ handleSuccess, definition }: CaptureFormProps) {
           errorMessage={errors?.termOverride?.message}
         >
           <Input
-            className="bg-primary-muted text-text-fixed-dark"
+            className="border-primary-muted text-text-fixed-dark"
             placeholder="Há uma variação no termo original?"
             {...register("termOverride")}
           />
+          <p className="text-xs italic">
+            Este campo é opcional. Preencha apenas se quiser adicionar uma
+            grafia alternativa para esta definição.
+          </p>
         </FieldWrapper>
-        <p>
-          Este campo é opcional. Preencha apenas se quiser adicionar uma grafia
-          alternativa para esta definição.
-        </p>
 
         <FieldWrapper
           inputId="translation"
@@ -100,12 +104,12 @@ export function CaptureForm({ handleSuccess, definition }: CaptureFormProps) {
           errorMessage={errors.translation?.message}
         >
           <Input
-            className="bg-primary-muted text-text-fixed-dark"
-            placeholder="O que você quer salvar hoje?"
+            className=" text-text-fixed-dark border-primary-muted"
+            placeholder="Qual a tradução deste termo?"
             {...register("translation")}
           />
         </FieldWrapper>
-        <div className="flex gap-2">
+        <div className="flex gap-2 ">
           <FieldWrapper
             inputId="partOfSpeech"
             label="Classe gramatical"
@@ -116,7 +120,7 @@ export function CaptureForm({ handleSuccess, definition }: CaptureFormProps) {
               control={control}
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-full bg-primary-muted text-text-fixed-dark">
+                  <SelectTrigger className="w-full border-primary-muted text-text-fixed-dark">
                     <SelectValue placeholder="Escolha uma classe" />
                   </SelectTrigger>
                   <SelectContent className="bg-surface-subtle">
@@ -144,7 +148,7 @@ export function CaptureForm({ handleSuccess, definition }: CaptureFormProps) {
                 control={control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full bg-primary-muted text-text-fixed-dark">
+                    <SelectTrigger className="w-full border-primary-muted text-text-fixed-dark">
                       <SelectValue placeholder="Escolha uma classe" />
                     </SelectTrigger>
                     <SelectContent className="bg-surface-subtle">
@@ -170,19 +174,30 @@ export function CaptureForm({ handleSuccess, definition }: CaptureFormProps) {
         >
           <Textarea
             placeholder="Conte um pouco mais sobre essa definição..."
-            className="bg-primary-muted text-text-fixed-dark min-h-20 w-full"
+            className="border-primary-muted text-text-fixed-dark min-h-20 w-full"
             rows={5}
             {...register("notes")}
           />
         </FieldWrapper>
         <Button
           type="submit"
-          className="bg-primary-muted text-primary w-full rounded-full mt-20"
+          variant="secondary"
+          className=" w-full rounded-full "
           style={{ fontWeight: "bold" }}
           onClick={() => console.log("button is clicked", isPending)}
           disabled={isPending}
         >
-          Salvar entrada
+          Confirmar
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          className=" w-full rounded-full"
+          style={{ fontWeight: "bold" }}
+          onClick={onClose}
+          disabled={isPending}
+        >
+          Cancelar
         </Button>
       </motion.form>
     </>

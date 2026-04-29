@@ -16,14 +16,16 @@ import { Button } from "../ui/button";
 interface DefinitionCardProps {
   definition: CompleteDefinition;
   isPrimary?: boolean;
+  onClick: () => void;
 }
 
 export const DefinitionCard = ({
   definition,
   isPrimary = false,
+  onClick,
 }: DefinitionCardProps) => {
   return (
-    <Card className="p-4 relative gap-2">
+    <Card className="p-4 relative gap-2" onClick={onClick}>
       <div className="flex gap-2 items-center absolute top-4 right-4 ">
         <Button variant={"ghost"} aria-label="Ver mais e editar">
           <MoreHorizontal />

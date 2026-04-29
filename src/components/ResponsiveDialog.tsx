@@ -65,7 +65,7 @@ export function ResponsiveDialog({
           <DrawerTitle>{title}</DrawerTitle>
           {description && <DrawerDescription>{description}</DrawerDescription>}
         </DrawerHeader>
-        <div className="w-screen min-w-screen">{children}</div>
+        {children}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
