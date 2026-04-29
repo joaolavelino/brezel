@@ -14,7 +14,7 @@ export default function Home() {
 
   return (
     <div className=" min-h-screen ">
-      <main className="flex flex-col min-h-screen ">
+      <main className="flex flex-col min-h-screen pt-15">
         <h1>Brezel</h1>
         <p>{greeting}</p>
         <FooterTabs />

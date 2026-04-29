@@ -31,6 +31,10 @@ export function CaptureContent({
     toggleCapture();
   };
 
+  const handleNewEntry = () => {
+    setCreatedEntry(null);
+  };
+
   return (
     <>
       {!isCaptureMode ? (
@@ -94,7 +98,8 @@ export function CaptureContent({
               <motion.div layout className="flex flex-col items-start w-full">
                 <CaptureConfirm
                   entryId={createdEntry.id}
-                  handleClose={() => {}}
+                  handleClose={handleClose}
+                  handleNewEntry={handleNewEntry}
                 />
                 <Button
                   variant="ghost"

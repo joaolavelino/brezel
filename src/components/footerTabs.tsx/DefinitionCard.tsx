@@ -3,12 +3,33 @@ import { Lightbulb, Plus, Star, StarHalf, StarIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { motion } from "framer-motion";
+import { Definition } from "@/generated/prisma/client";
+import { ResponsiveDialog } from "../ResponsiveDialog";
 
 interface DefinitionCardProps {
   entry: EntryListItem;
 }
 
 export const DefinitionCard = ({ entry }: DefinitionCardProps) => {
+  const [selectedDefinition, setSelectedDefinition] =
+    useState<Definition | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleCreate = () => {
+    setSelectedDefinition(null); // null = create mode
+    setIsFormOpen(true);
+  };
+
+  const handleEdit = (definition: Definition) => {
+    setSelectedDefinition(definition); // populated = edit mode
+    setIsFormOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsFormOpen(false);
+    setSelectedDefinition(null);
+  };
+
   return (
     <motion.div
       layout
@@ -22,7 +43,11 @@ export const DefinitionCard = ({ entry }: DefinitionCardProps) => {
           </h3>
         </div>
         {entry && entry?.definitions?.length > 0 && (
-          <Button size={"icon"} className="rounded-full bg-secondary">
+          <Button
+            size={"icon"}
+            className="rounded-full bg-secondary"
+            onClick={handleCreate}
+          >
             <Plus />
           </Button>
         )}
@@ -33,7 +58,10 @@ export const DefinitionCard = ({ entry }: DefinitionCardProps) => {
             <p className="text-sm">
               Ainda não há definições salvas nesta entrada
             </p>
-            <Button className="rounded-full w-full bg-secondary">
+            <Button
+              className="rounded-full w-full bg-secondary"
+              onClick={handleCreate}
+            >
               Criar primeira entrada
             </Button>
           </div>
@@ -59,6 +87,18 @@ export const DefinitionCard = ({ entry }: DefinitionCardProps) => {
           </div>
         )}
       </div>
+
+      <ResponsiveDialog
+        onOpenChange={handleClose}
+        open={isFormOpen}
+        title={selectedDefinition ? "Editar definição" : "Adicionar definição"}
+      >
+        {selectedDefinition ? (
+          <p>{selectedDefinition.translation}</p>
+        ) : (
+          <p>Nova definição</p>
+        )}
+      </ResponsiveDialog>
     </motion.div>
   );
 };

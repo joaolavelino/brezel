@@ -1,5 +1,5 @@
 import { queryKeys } from "@/constants/queryKeys";
-import { createEntry, getEntries } from "@/services/entries";
+import { createEntry, getEntries, getEntry } from "@/services/entries";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useCreateEntry() {
@@ -17,5 +17,12 @@ export function useGetEntries() {
   return useQuery({
     queryFn: getEntries,
     queryKey: queryKeys.entries.all,
+  });
+}
+
+export function useGetEntry(id: string) {
+  return useQuery({
+    queryFn: () => getEntry(id),
+    queryKey: queryKeys.entries.detail(id),
   });
 }

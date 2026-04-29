@@ -1,6 +1,6 @@
 import { CreateEntrySchema } from "@/app/api/entries/route";
 import { Entry } from "@/generated/prisma/client";
-import { EntryListItem } from "@/types/entries";
+import { EntryDetail, EntryListItem } from "@/types/entries";
 import z from "zod";
 
 export async function getEntries(): Promise<EntryListItem[]> {
@@ -23,6 +23,13 @@ export async function createEntry(payload: CreateEntryPayload): Promise<Entry> {
     body: JSON.stringify(payload),
   });
 
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+  return data.data;
+}
+
+export async function getEntry(id: string): Promise<EntryDetail> {
+  const response = await fetch(`/api/entries/${id}`);
   const data = await response.json();
   if (!response.ok) throw new Error(data.message);
   return data.data;
