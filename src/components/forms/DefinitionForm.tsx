@@ -20,6 +20,11 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { CompleteDefinition } from "@/types/entries";
+import {
+  useCreateDefinition,
+  useUpdateDefinition,
+} from "@/hooks/Query/useDefinitions";
+import { toast } from "sonner";
 
 const DefinitionSchema = z
   .object({
@@ -46,12 +51,14 @@ const DefinitionSchema = z
 type DefinitionFormType = z.infer<typeof DefinitionSchema>;
 
 interface DefinitionFormProps {
+  entryId: string;
   handleSuccess: (definition: CompleteDefinition) => void;
   definition?: Definition | null;
   onClose: () => void;
 }
 
 export function DefinitionForm({
+  entryId,
   handleSuccess,
   definition,
   onClose,
@@ -73,10 +80,49 @@ export function DefinitionForm({
 
   const isNoun = partOfSpeechFormValue === "noun";
 
-  const { mutate: createEntry, isPending } = useCreateEntry();
+  const { mutate: createDefinition, isPending: isCreatePending } =
+    useCreateDefinition(entryId);
+  const { mutate: updateDefinition, isPending: isUpdatePending } =
+    useUpdateDefinition(entryId);
 
   const onSubmit = (data: DefinitionFormType) => {
     console.log(data, errors);
+
+    const payload = {
+      ...data,
+      termOverride: data.termOverride || undefined,
+      notes: data.notes || undefined,
+    };
+
+    if (!definition) {
+      createDefinition(
+        { entryId: entryId, payload },
+        {
+          onError: (error) => {
+            const message =
+              error.message === "Failed to fetch"
+                ? "Sem conexão. Verifique a sua rede de internet e tente novamente."
+                : error.message;
+            toast.error(message);
+          },
+          onSuccess: handleSuccess,
+        },
+      );
+    } else {
+      updateDefinition(
+        { definitionId: definition.id, entryId, payload },
+        {
+          onError: (error) => {
+            const message =
+              error.message === "Failed to fetch"
+                ? "Sem conexão. Verifique a sua rede de internet e tente novamente."
+                : error.message;
+            toast.error(message);
+          },
+          onSuccess: handleSuccess,
+        },
+      );
+    }
   };
 
   return (
@@ -184,8 +230,8 @@ export function DefinitionForm({
           variant="secondary"
           className=" w-full rounded-full "
           style={{ fontWeight: "bold" }}
-          onClick={() => console.log("button is clicked", isPending)}
-          disabled={isPending}
+          onClick={() => console.log("button is clicked")}
+          disabled={isCreatePending || isUpdatePending}
         >
           Confirmar
         </Button>
@@ -195,7 +241,7 @@ export function DefinitionForm({
           className=" w-full rounded-full"
           style={{ fontWeight: "bold" }}
           onClick={onClose}
-          disabled={isPending}
+          disabled={isCreatePending || isUpdatePending}
         >
           Cancelar
         </Button>

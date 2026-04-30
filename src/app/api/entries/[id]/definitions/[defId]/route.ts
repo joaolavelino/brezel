@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import z from "zod";
 
-const UpdateDefinitionSchema = z
+export const UpdateDefinitionSchema = z
   .object({
     termOverride: z.string().min(1).trim().optional(),
     translation: z.string().min(1).trim().optional(),
@@ -16,12 +16,12 @@ const UpdateDefinitionSchema = z
   })
   .refine(
     (data) => data.partOfSpeech !== "noun" || data.nounArticle !== undefined,
-    { message: "nounArticle is required when partOfSpeech is noun" }
+    { message: "nounArticle is required when partOfSpeech is noun" },
   );
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; defId: string }> }
+  { params }: { params: Promise<{ id: string; defId: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();
@@ -66,6 +66,7 @@ export async function PATCH(
     const updated = await prisma.definition.update({
       where: { id: defId },
       data: data,
+      include: { examples: true },
     });
 
     return Response.json({ data: updated });
@@ -77,7 +78,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; defId: string }> }
+  { params }: { params: Promise<{ id: string; defId: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();

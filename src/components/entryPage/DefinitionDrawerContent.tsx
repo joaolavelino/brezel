@@ -68,6 +68,7 @@ export const DefinitionDrawerContent = ({
 
   const handleSuccess = (definition: CompleteDefinition) => {
     setDefinition(definition);
+    setShowDefinitionForm(false);
   };
 
   const formTitleCard = !!definition ? "Editar definição" : "Criar definição";
@@ -126,6 +127,7 @@ export const DefinitionDrawerContent = ({
         <CardContent className="p-0">
           {!definition ? (
             <DefinitionForm
+              entryId={entry.id}
               handleSuccess={(definition: CompleteDefinition) =>
                 handleSuccess(definition)
               }
@@ -133,6 +135,7 @@ export const DefinitionDrawerContent = ({
             />
           ) : showDefinitionForm ? (
             <DefinitionForm
+              entryId={entry.id}
               handleSuccess={(definition: CompleteDefinition) =>
                 handleSuccess(definition)
               }

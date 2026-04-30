@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import z from "zod";
 
-const CreateDefinitionSchema = z
+export const CreateDefinitionSchema = z
   .object({
     termOverride: z.string().min(1).trim().optional(),
     translation: z.string().min(1).trim(),
@@ -15,16 +15,16 @@ const CreateDefinitionSchema = z
   })
   .refine(
     (data) => data.partOfSpeech !== "noun" || data.nounArticle !== undefined,
-    { message: "nounArticle is required when partOfSpeech is noun" }
+    { message: "nounArticle is required when partOfSpeech is noun" },
   )
   .refine(
     (data) => data.partOfSpeech === "noun" || data.nounArticle === undefined,
-    { message: "nounArticle is only valid when partOfSpeech is noun" }
+    { message: "nounArticle is only valid when partOfSpeech is noun" },
   );
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();
@@ -56,6 +56,7 @@ export async function POST(
         ...data,
         entryId: entryId,
       },
+      include: { examples: true },
     });
 
     return Response.json({ data: definition });
