@@ -13,3 +13,11 @@ export const nounArticle: Record<NounArticle, string> = {
   plural: "Plural",
   unknown: "Desconhecido",
 };
+
+export const displayArticle: Record<NounArticle, string> = {
+  der: "Der ",
+  die: "Die ",
+  das: "Das ",
+  plural: "",
+  unknown: "",
+};

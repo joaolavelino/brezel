@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { DefinitionForm } from "../forms/DefinitionForm";
 import { useSetPrimaryDefinition } from "@/hooks/Query/useEntries";
 import { toast } from "sonner";
+import { displayArticle, partOfSpeech } from "@/constants/definitions";
 
 interface DefinitionDrawerContentProps {
   definition: CompleteDefinition | null;
@@ -98,6 +99,10 @@ export const DefinitionDrawerContent = ({
     );
   };
 
+  const displayTerm = definition?.termOverride
+    ? definition.termOverride
+    : entry.term;
+
   return (
     <div className="space-y-4">
       {definition && (
@@ -119,11 +124,6 @@ export const DefinitionDrawerContent = ({
         </section>
       )}
       <Card className="p-4 gap-2">
-        <CardHeader className="p-0">
-          <CardTitle>
-            {showDefinitionForm ? formTitleCard : "Ver definição"}
-          </CardTitle>
-        </CardHeader>
         <CardContent className="p-0">
           {!definition ? (
             <DefinitionForm
@@ -143,8 +143,26 @@ export const DefinitionDrawerContent = ({
               onClose={handleCloseDefinitionForm}
             />
           ) : (
-            <>
-              <p>HOY</p>
+            <div className="space-y-2">
+              <div className="">
+                <h2 className="text-xl font-bold text-secondary">
+                  {!!definition.nounArticle && (
+                    <span>{displayArticle[definition.nounArticle]}</span>
+                  )}
+                  {displayTerm}
+                </h2>
+                <p className="leading-1 italic text-xs">
+                  {partOfSpeech[definition.partOfSpeech]}
+                </p>
+              </div>
+              <div>
+                <p className="text-lg font-semibold leading-tight">
+                  {definition.translation}
+                </p>
+                <p className="text-sm italic leading-tight ">
+                  {definition.notes}
+                </p>
+              </div>
               <Button
                 onClick={handleDefinitionEditView}
                 className="w-full rounded-full"
@@ -152,7 +170,7 @@ export const DefinitionDrawerContent = ({
               >
                 Editar definição
               </Button>
-            </>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -198,7 +216,7 @@ export const DefinitionDrawerContent = ({
               {definition?.examples.map((ex) => (
                 <Card
                   key={ex.id}
-                  className="gap-0 p-4 pr-8 relative"
+                  className="gap-2 p-4 pr-8 relative"
                   onClick={() => handleExampleEditView(ex)}
                 >
                   <Button
@@ -209,7 +227,7 @@ export const DefinitionDrawerContent = ({
                     <MoreHorizontal />
                   </Button>
                   <CardHeader className="p-0">
-                    <CardTitle>{ex.text}</CardTitle>
+                    <CardTitle className="leading-4">{ex.text}</CardTitle>
                   </CardHeader>
                   {ex.notes && (
                     <CardContent className="p-0">

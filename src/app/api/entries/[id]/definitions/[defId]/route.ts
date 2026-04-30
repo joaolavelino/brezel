@@ -60,7 +60,10 @@ export async function PATCH(
     if (!definition) return ApiError.notFound();
 
     //VALIDATE THE POS-NOUN RELATION
-    if (definition.partOfSpeech !== "noun" && data.nounArticle)
+
+    const allowNounArticle =
+      definition.partOfSpeech == "noun" || data.partOfSpeech == "noun";
+    if (!allowNounArticle && data.nounArticle)
       return ApiError.badRequest("nounArticle-not-valid-for-non-noun");
 
     const updated = await prisma.definition.update({
