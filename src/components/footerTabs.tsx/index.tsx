@@ -49,7 +49,7 @@ export function FooterTabs() {
                     : "64px",
               y: mode === "capture" ? "100%" : 0,
             }}
-            className={`bg-surface-muted pt-2  rounded-t-4xl px-8 top-6 relative z-10 overflow-hidden flex flex-col ${
+            className={`bg-surface-muted pt-2  rounded-t-4xl px-8 top-6 relative z-10 overflow-hidden flex flex-col max-h-[calc(100dvh-80px)] ${
               mode === "search"
                 ? "pb-8"
                 : mode === "capture"
