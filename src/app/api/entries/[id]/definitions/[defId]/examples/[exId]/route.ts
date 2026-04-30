@@ -5,14 +5,14 @@ import { NextRequest } from "next/server";
 import z from "zod";
 import { Prisma } from "@/generated/prisma/client";
 
-const UpdateExampleSchema = z.object({
+export const UpdateExampleSchema = z.object({
   text: z.string().min(1).trim().optional(),
   notes: z.string().min(1).trim().nullable().optional(),
 });
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; defId: string; exId: string }> }
+  { params }: { params: Promise<{ id: string; defId: string; exId: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();
@@ -62,7 +62,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; defId: string; exId: string }> }
+  { params }: { params: Promise<{ id: string; defId: string; exId: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();

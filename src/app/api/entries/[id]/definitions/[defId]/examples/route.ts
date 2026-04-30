@@ -4,14 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import z from "zod";
 
-const CreateExampleSchema = z.object({
+export const CreateExampleSchema = z.object({
   text: z.string().min(1).trim(),
   notes: z.string().min(1).trim().optional(),
 });
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; defId: string }> }
+  { params }: { params: Promise<{ id: string; defId: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();
