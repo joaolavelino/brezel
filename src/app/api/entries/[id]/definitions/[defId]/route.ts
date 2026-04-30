@@ -96,15 +96,32 @@ export async function DELETE(
     return ApiError.badRequest("invalid-url");
 
   try {
-    const definition = await prisma.definition.delete({
-      where: {
-        id: defId, //is this the correct definition
-        entryId: entryId, //from the correct entry
-        entry: { userId: user.id, deletedAt: null }, // that belongs to the correct user and it's not deleted
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const entry = await tx.entry.findFirst({
+        where: {
+          id: entryId,
+        },
+      });
+
+      const definition = await tx.definition.delete({
+        where: {
+          id: defId, //is this the correct definition
+          entryId: entryId, //from the correct entry
+          entry: { userId: user.id, deletedAt: null }, // that belongs to the correct user and it's not deleted
+        },
+      });
+
+      if (definition.id === entry?.primaryDefinitionId) {
+        await tx.entry.update({
+          where: { id: entryId, userId: user.id },
+          data: { primaryDefinitionId: null },
+        });
+      }
+
+      return definition;
     });
 
-    return Response.json({ data: { translation: definition.translation } });
+    return Response.json({ data: { translation: result.translation } });
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

@@ -45,7 +45,9 @@ export const DefinitionList = ({ entry }: DefinitionListProps) => {
 
   const definitionDisplayList = isDefinitionListOpen
     ? entry.definitions
-    : [singleDefinition];
+    : singleDefinition
+      ? [singleDefinition]
+      : [];
   return (
     <>
       <section className="mt-4">
@@ -107,10 +109,11 @@ export const DefinitionList = ({ entry }: DefinitionListProps) => {
       <ResponsiveDialog
         onOpenChange={setIsDrawerOpen}
         open={isDrawerOpen}
-        title={`${!!selectedDefinition ? "Ver definição" : "Criar definição"}`}
+        title=""
       >
         <p>{!!selectedDefinition ? "Ver definição" : "Criar definição"}</p>
         <DefinitionDrawerContent
+          onClose={handleCloseDrawer}
           entry={entry}
           definition={selectedDefinition}
         />

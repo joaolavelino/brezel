@@ -1,6 +1,5 @@
 import { UpdateDefinitionSchema } from "@/app/api/entries/[id]/definitions/[defId]/route";
 import { CreateDefinitionSchema } from "@/app/api/entries/[id]/definitions/route";
-import { Definition } from "@/generated/prisma/client";
 import { CompleteDefinition } from "@/types/entries";
 import z from "zod";
 
@@ -53,5 +52,25 @@ export async function updateDefinition(
 
   const data = await response.json();
   if (!response.ok) throw new Error(data.message);
+  return data.data;
+}
+
+type completeDeletePayloadType = {
+  entryId: string;
+  definitionId: string;
+};
+export async function deleteDefinition(
+  payload: completeDeletePayloadType,
+): Promise<{ translation: string }> {
+  const { entryId, definitionId } = payload;
+  const response = await fetch(
+    `/api/entries/${entryId}/definitions/${definitionId}`,
+    {
+      method: "DELETE",
+    },
+  );
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+
   return data.data;
 }

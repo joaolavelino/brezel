@@ -1,5 +1,6 @@
+import { Example } from "@/generated/prisma/client";
+import { useSetPrimaryDefinition } from "@/hooks/Query/useEntries";
 import { CompleteDefinition, EntryDetail } from "@/types/entries";
-import { Button } from "../ui/button";
 import {
   AlertTriangle,
   MessageCircle,
@@ -8,21 +9,22 @@ import {
   Star,
 } from "lucide-react";
 import { useState } from "react";
-import { Example } from "@/generated/prisma/client";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { DefinitionForm } from "../forms/DefinitionForm";
-import { useSetPrimaryDefinition } from "@/hooks/Query/useEntries";
 import { toast } from "sonner";
-import { displayArticle, partOfSpeech } from "@/constants/definitions";
+import { DefinitionForm } from "../forms/DefinitionForm";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { DefinitionDisplayCard } from "./DefinitionDisplayCard";
 
 interface DefinitionDrawerContentProps {
   definition: CompleteDefinition | null;
   entry: EntryDetail;
+  onClose: () => void;
 }
 
 export const DefinitionDrawerContent = ({
   definition: currentDefinition,
   entry,
+  onClose,
 }: DefinitionDrawerContentProps) => {
   const [definition, setDefinition] = useState<null | CompleteDefinition>(
     currentDefinition,
@@ -72,6 +74,11 @@ export const DefinitionDrawerContent = ({
     setShowDefinitionForm(false);
   };
 
+  const handleDeletionSuccess = () => {
+    setDefinition(null);
+    onClose();
+  };
+
   const formTitleCard = !!definition ? "Editar definição" : "Criar definição";
 
   const showExampleSection = !!definition && !showDefinitionForm;
@@ -99,10 +106,6 @@ export const DefinitionDrawerContent = ({
     );
   };
 
-  const displayTerm = definition?.termOverride
-    ? definition.termOverride
-    : entry.term;
-
   return (
     <div className="space-y-4">
       {definition && (
@@ -123,57 +126,37 @@ export const DefinitionDrawerContent = ({
           )}
         </section>
       )}
-      <Card className="p-4 gap-2">
-        <CardContent className="p-0">
-          {!definition ? (
-            <DefinitionForm
-              entryId={entry.id}
-              handleSuccess={(definition: CompleteDefinition) =>
-                handleSuccess(definition)
-              }
-              onClose={handleCloseDefinitionForm}
-            />
-          ) : showDefinitionForm ? (
-            <DefinitionForm
-              entryId={entry.id}
-              handleSuccess={(definition: CompleteDefinition) =>
-                handleSuccess(definition)
-              }
-              definition={definition}
-              onClose={handleCloseDefinitionForm}
-            />
-          ) : (
-            <div className="space-y-2">
-              <div className="">
-                <h2 className="text-xl font-bold text-secondary">
-                  {!!definition.nounArticle && (
-                    <span>{displayArticle[definition.nounArticle]}</span>
-                  )}
-                  {displayTerm}
-                </h2>
-                <p className="leading-1 italic text-xs">
-                  {partOfSpeech[definition.partOfSpeech]}
-                </p>
-              </div>
-              <div>
-                <p className="text-lg font-semibold leading-tight">
-                  {definition.translation}
-                </p>
-                <p className="text-sm italic leading-tight ">
-                  {definition.notes}
-                </p>
-              </div>
-              <Button
-                onClick={handleDefinitionEditView}
-                className="w-full rounded-full"
-                size={"sm"}
-              >
-                Editar definição
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {!definition ? (
+        <Card className="p-4">
+          <DefinitionForm
+            entryId={entry.id}
+            handleSuccess={(definition: CompleteDefinition) =>
+              handleSuccess(definition)
+            }
+            onClose={handleCloseDefinitionForm}
+            drawerClose={onClose}
+          />
+        </Card>
+      ) : showDefinitionForm ? (
+        <Card className="p-4">
+          <DefinitionForm
+            entryId={entry.id}
+            handleSuccess={(definition: CompleteDefinition) =>
+              handleSuccess(definition)
+            }
+            definition={definition}
+            onClose={handleCloseDefinitionForm}
+            drawerClose={onClose}
+          />
+        </Card>
+      ) : (
+        <DefinitionDisplayCard
+          onDeletionSuccess={handleDeletionSuccess}
+          definition={definition}
+          entry={entry}
+          openEditionForm={handleDefinitionEditView}
+        />
+      )}
 
       {showExampleSection && (
         <section>

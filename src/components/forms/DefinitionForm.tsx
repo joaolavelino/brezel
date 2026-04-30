@@ -55,6 +55,7 @@ interface DefinitionFormProps {
   handleSuccess: (definition: CompleteDefinition) => void;
   definition?: Definition | null;
   onClose: () => void;
+  drawerClose: () => void;
 }
 
 export function DefinitionForm({
@@ -62,6 +63,7 @@ export function DefinitionForm({
   handleSuccess,
   definition,
   onClose,
+  drawerClose,
 }: DefinitionFormProps) {
   const { control, register, handleSubmit, watch, formState } =
     useForm<DefinitionFormType>({
@@ -240,7 +242,7 @@ export function DefinitionForm({
           variant="ghost"
           className=" w-full rounded-full"
           style={{ fontWeight: "bold" }}
-          onClick={onClose}
+          onClick={definition ? onClose : drawerClose}
           disabled={isCreatePending || isUpdatePending}
         >
           Cancelar
