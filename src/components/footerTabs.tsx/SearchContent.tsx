@@ -9,6 +9,7 @@ import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { SearchTagFilter } from "./SearchTagFilter";
+import { useRouter } from "next/navigation";
 
 interface SearchProps {
   isSearchMode: boolean;
@@ -22,6 +23,7 @@ export function SearchContent({
   enableSearchMode,
   disableSearchMode,
 }: SearchProps) {
+  const router = useRouter();
   const { data: entries = [] } = useGetEntries();
   const {
     query,
@@ -156,6 +158,7 @@ export function SearchContent({
                     key={entry.id}
                     variants={itemVariants}
                     className="bg-surface-subtle p-2 rounded-md border border-white/5"
+                    onClick={() => router.push(`/entries/${entry.id}`)}
                   >
                     <h3 className="capitalize text-primary">{entry.term}</h3>
                     <p className="text-xs italic text-text-light">
