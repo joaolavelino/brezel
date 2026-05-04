@@ -14,6 +14,8 @@ import { DefinitionForm } from "../forms/DefinitionForm";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { DefinitionDisplayCard } from "./DefinitionDisplayCard";
+import { ExampleForm } from "../forms/ExampleForm";
+import { ExampleCard } from "./ExampleCard";
 
 interface DefinitionDrawerContentProps {
   definition: CompleteDefinition | null;
@@ -174,7 +176,7 @@ export const DefinitionDrawerContent = ({
               <Plus />
             </Button>
           </header>
-          {hasNoExamples && (
+          {!showExampleForm && hasNoExamples && (
             <div className="w-full p-4 border-2 border-primary-muted rounded-md mt-2 flex flex-col items-center gap-4">
               <div className="p-3 bg-primary-muted rounded-full w-fit">
                 <AlertTriangle size={20} className="text-primary " />
@@ -190,34 +192,32 @@ export const DefinitionDrawerContent = ({
             </div>
           )}
           {showExampleForm ? (
-            <div>
-              <p>FORM</p>
-              <Button onClick={handleCloseExampleForm}>Back</Button>
-            </div>
+            <Card className="p-4 gap-2 mt-2">
+              <CardTitle>
+                {selectedExample ? "Editar exemplo" : "Criar exemplo"}
+              </CardTitle>
+              <CardContent className="p-0">
+                <ExampleForm
+                  definitionId={definition.id}
+                  entryId={entry.id}
+                  handleCreateSuccess={handleCloseExampleForm}
+                  handleUpdateSuccess={handleCloseExampleForm}
+                  onClose={handleCloseExampleForm}
+                  example={selectedExample}
+                />
+              </CardContent>
+            </Card>
           ) : (
             <div className="space-y-2 mt-2">
               {definition?.examples.map((ex) => (
-                <Card
+                <ExampleCard
                   key={ex.id}
-                  className="gap-2 p-4 pr-8 relative"
-                  onClick={() => handleExampleEditView(ex)}
-                >
-                  <Button
-                    variant={"ghost"}
-                    className="absolute right-1 top-1"
-                    onClick={() => handleExampleEditView(ex)}
-                  >
-                    <MoreHorizontal />
-                  </Button>
-                  <CardHeader className="p-0">
-                    <CardTitle className="leading-4">{ex.text}</CardTitle>
-                  </CardHeader>
-                  {ex.notes && (
-                    <CardContent className="p-0">
-                      <p className="text-xs italic">{ex.notes}</p>
-                    </CardContent>
-                  )}
-                </Card>
+                  definitionId={definition.id}
+                  entryId={entry.id}
+                  example={ex}
+                  handleOpenEditForm={handleExampleEditView}
+                  onDeletionSuccess={() => {}}
+                />
               ))}
             </div>
           )}

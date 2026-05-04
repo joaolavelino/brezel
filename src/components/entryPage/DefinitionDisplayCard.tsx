@@ -142,7 +142,7 @@ export const DefinitionDisplayCard = ({
                       <Loader className="animate-spin" />
                     ) : (
                       <Trash size={16} />
-                    )}{" "}
+                    )}
                     Confirmar exclusão
                   </Button>
                 </motion.div>
