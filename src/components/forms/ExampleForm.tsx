@@ -16,7 +16,7 @@ import { CreateExampleSchema } from "@/validation/exampleSchemas";
 interface ExampleFormProps {
   entryId: string;
   definitionId: string;
-  handleCreateSuccess: () => void;
+  handleCreateSuccess: (example: Example) => void;
   handleUpdateSuccess: (example: Example) => void;
   onClose: () => void;
   example?: Example | null;
@@ -58,7 +58,7 @@ export const ExampleForm = ({
           },
           onSuccess: (data) => {
             toast.success(`Exemplo ${data.text} foi criado com sucesso!`);
-            handleCreateSuccess();
+            handleCreateSuccess(data);
           },
         },
       );

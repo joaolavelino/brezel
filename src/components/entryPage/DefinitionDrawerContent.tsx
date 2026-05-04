@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { DefinitionDisplayCard } from "./DefinitionDisplayCard";
 import { ExampleForm } from "../forms/ExampleForm";
 import { ExampleCard } from "./ExampleCard";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface DefinitionDrawerContentProps {
   definition: CompleteDefinition | null;
@@ -81,7 +82,43 @@ export const DefinitionDrawerContent = ({
     onClose();
   };
 
-  const formTitleCard = !!definition ? "Editar definição" : "Criar definição";
+  const handleExampleCreationSuccess = (example: Example) => {
+    if (!definition) return;
+    const updatedDefinition: CompleteDefinition = {
+      ...definition,
+      examples: [...definition.examples, example],
+    };
+
+    setDefinition(updatedDefinition);
+    handleCloseExampleForm();
+  };
+
+  const handleExampleEditSuccess = (updatedExample: Example) => {
+    if (!definition) return;
+
+    const updatedExampleList = definition.examples.map((ex) => {
+      if (ex.id === updatedExample.id) {
+        return updatedExample;
+      }
+      return ex;
+    });
+    const updatedDefinition: CompleteDefinition = {
+      ...definition,
+      examples: updatedExampleList,
+    };
+
+    setDefinition(updatedDefinition);
+    handleCloseExampleForm();
+  };
+
+  const handleExampleDeleteSuccess = (id: string) => {
+    if (!definition) return;
+    const updatedDefinition = {
+      ...definition,
+      examples: definition?.examples.filter((el) => el.id !== id),
+    };
+    setDefinition(updatedDefinition);
+  };
 
   const showExampleSection = !!definition && !showDefinitionForm;
 
@@ -200,26 +237,36 @@ export const DefinitionDrawerContent = ({
                 <ExampleForm
                   definitionId={definition.id}
                   entryId={entry.id}
-                  handleCreateSuccess={handleCloseExampleForm}
-                  handleUpdateSuccess={handleCloseExampleForm}
+                  handleCreateSuccess={(example: Example) =>
+                    handleExampleCreationSuccess(example)
+                  }
+                  handleUpdateSuccess={(example: Example) =>
+                    handleExampleEditSuccess(example)
+                  }
                   onClose={handleCloseExampleForm}
                   example={selectedExample}
                 />
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-2 mt-2">
-              {definition?.examples.map((ex) => (
-                <ExampleCard
-                  key={ex.id}
-                  definitionId={definition.id}
-                  entryId={entry.id}
-                  example={ex}
-                  handleOpenEditForm={handleExampleEditView}
-                  onDeletionSuccess={() => {}}
-                />
-              ))}
-            </div>
+            <motion.div
+              className="space-y-2 mt-2"
+              layout
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <AnimatePresence mode="popLayout" initial={false}>
+                {definition?.examples.map((ex) => (
+                  <ExampleCard
+                    key={ex.id}
+                    definitionId={definition.id}
+                    entryId={entry.id}
+                    example={ex}
+                    handleOpenEditForm={handleExampleEditView}
+                    onDeletionSuccess={() => handleExampleDeleteSuccess(ex.id)}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
           )}
         </section>
       )}

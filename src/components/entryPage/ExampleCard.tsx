@@ -65,6 +65,9 @@ export const ExampleCard = ({
   return (
     <motion.div
       layout
+      initial={{ opacity: 0, scale: 0.9, x: -20 }}
+      animate={{ opacity: 1, scale: 1, x: 0 }}
+      exit={{ opacity: 0, scale: 0.9, x: 20, transition: { duration: 0.2 } }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
       <Card key={example.id} className="gap-2 p-4 pr-8 relative">
@@ -86,66 +89,74 @@ export const ExampleCard = ({
 
           <AnimatePresence>
             {isExpanded && (
-              <motion.div className="flex gap-4 mt-4 h-10">
-                <AnimatePresence mode="popLayout" initial={false}>
-                  {!isConfirmDelete ? (
-                    // ESTADO INICIAL
-                    <motion.div
-                      key="normal-state"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      className="flex-1"
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="flex gap-4 mt-4 h-10">
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    {!isConfirmDelete ? (
+                      // ESTADO INICIAL
+                      <motion.div
+                        key="normal-state"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        className="flex-1"
+                      >
+                        <Button
+                          onClick={() => handleOpenEditForm(example)}
+                          className="w-full rounded-full"
+                        >
+                          Editar exemplo
+                        </Button>
+                      </motion.div>
+                    ) : (
+                      // ESTADO DE CONFIRMAÇÃO
+                      <motion.div
+                        key="confirm-state"
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        className="flex flex-1 gap-2"
+                      >
+                        <Button
+                          variant={"outline"}
+                          className=" rounded-full"
+                          onClick={() => setIsConfirmDelete(false)}
+                        >
+                          <X />
+                        </Button>
+                        <Button
+                          variant={"destructive"}
+                          className="flex-2 rounded-full gap-2 whitespace-nowrap"
+                          onClick={handleDeletion}
+                          disabled={isPending}
+                        >
+                          {isPending ? (
+                            <Loader className="animate-spin" />
+                          ) : (
+                            <Trash size={16} />
+                          )}{" "}
+                          Confirmar exclusão
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  {!isConfirmDelete && (
+                    <Button
+                      variant={"destructive"}
+                      className="rounded-full"
+                      size="icon"
+                      onClick={handleDeletion}
                     >
-                      <Button
-                        onClick={() => handleOpenEditForm(example)}
-                        className="w-full rounded-full"
-                      >
-                        Editar exemplo
-                      </Button>
-                    </motion.div>
-                  ) : (
-                    // ESTADO DE CONFIRMAÇÃO
-                    <motion.div
-                      key="confirm-state"
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      className="flex flex-1 gap-2"
-                    >
-                      <Button
-                        variant={"outline"}
-                        className=" rounded-full"
-                        onClick={() => setIsConfirmDelete(false)}
-                      >
-                        <X />
-                      </Button>
-                      <Button
-                        variant={"destructive"}
-                        className="flex-2 rounded-full gap-2 whitespace-nowrap"
-                        onClick={handleDeletion}
-                        disabled={isPending}
-                      >
-                        {isPending ? (
-                          <Loader className="animate-spin" />
-                        ) : (
-                          <Trash size={16} />
-                        )}{" "}
-                        Confirmar exclusão
-                      </Button>
-                    </motion.div>
+                      <Trash size={16} />
+                    </Button>
                   )}
-                </AnimatePresence>
-                {!isConfirmDelete && (
-                  <Button
-                    variant={"destructive"}
-                    className="rounded-full"
-                    size="icon"
-                    onClick={handleDeletion}
-                  >
-                    <Trash size={16} />
-                  </Button>
-                )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
