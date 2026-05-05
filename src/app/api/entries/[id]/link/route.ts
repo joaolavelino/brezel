@@ -2,16 +2,13 @@ import { Prisma } from "@/generated/prisma/client";
 import { ApiError } from "@/lib/errors/api-errors";
 import { getSessionUser } from "@/lib/get-session-user";
 import { prisma } from "@/lib/prisma";
+import { CreateLinkSchema } from "@/validation/linksSchemas";
 import { NextRequest } from "next/server";
 import z from "zod";
 
-const CreateLinkSchema = z.object({
-  targetId: z.cuid(),
-});
-
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();
@@ -63,7 +60,7 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();

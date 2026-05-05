@@ -1,22 +1,16 @@
 import { Example } from "@/generated/prisma/client";
 import { useSetPrimaryDefinition } from "@/hooks/Query/useEntries";
 import { CompleteDefinition, EntryDetail } from "@/types/entries";
-import {
-  AlertTriangle,
-  MessageCircle,
-  MoreHorizontal,
-  Plus,
-  Star,
-} from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertTriangle, MessageCircle, Plus, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { DefinitionForm } from "../forms/DefinitionForm";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { DefinitionDisplayCard } from "./DefinitionDisplayCard";
 import { ExampleForm } from "../forms/ExampleForm";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardTitle } from "../ui/card";
+import { DefinitionDisplayCard } from "./DefinitionDisplayCard";
 import { ExampleCard } from "./ExampleCard";
-import { AnimatePresence, motion } from "framer-motion";
 
 interface DefinitionDrawerContentProps {
   definition: CompleteDefinition | null;
