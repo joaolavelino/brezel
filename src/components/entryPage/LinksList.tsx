@@ -5,6 +5,7 @@ import { Link, Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { LinkForm } from "../forms/LinkForm";
+import { EmptyStateCard } from "../EmptyStateCard";
 
 interface LinksListProps {
   entryId: string;
@@ -15,7 +16,7 @@ export const LinksList = ({ entryId }: LinksListProps) => {
   const { data: entry } = useGetEntry(entryId);
 
   if (!entry) return <p>No entry found</p>;
-  if (entry.links.length == 0 || !entry.links) return <p>No entry found</p>;
+
   const linkedEntries = entry.links.map((link) => link.id);
   return (
     <section className="mt-4">
@@ -45,6 +46,15 @@ export const LinksList = ({ entryId }: LinksListProps) => {
               entryId={entryId}
               onClose={() => setIsCreating(false)}
               linkedEntries={linkedEntries}
+            />
+          )}
+
+          {!isCreating && entry.links.length == 0 && (
+            <EmptyStateCard
+              action={() => setIsCreating(true)}
+              actionText="Criar primeiro link"
+              description="Adicione links para outros termos que são relacionadas a este."
+              title="Nenhum link encontrado"
             />
           )}
 

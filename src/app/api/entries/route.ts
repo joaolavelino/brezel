@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import z from "zod";
 import { Prisma } from "@/generated/prisma/client";
+import { CreateEntrySchema } from "@/validation/entrySchemas";
 
 export async function GET(request: NextRequest) {
   const user = await getSessionUser();
@@ -62,13 +63,6 @@ export async function GET(request: NextRequest) {
     return ApiError.internal();
   }
 }
-
-export const CreateEntrySchema = z.object({
-  term: z.string().min(1).trim(),
-  notes: z.string().optional(),
-  form: z.enum(EntryForm).optional(),
-  tags: z.array(z.string()).optional().default([]),
-});
 
 export async function POST(request: NextRequest) {
   //1 - check user

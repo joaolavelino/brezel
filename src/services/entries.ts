@@ -1,6 +1,6 @@
-import { CreateEntrySchema } from "@/app/api/entries/route";
 import { Entry } from "@/generated/prisma/client";
 import { EntryDetail, EntryListItem } from "@/types/entries";
+import { CreateEntrySchema, EditEntrySchema } from "@/validation/entrySchemas";
 import z from "zod";
 
 export async function getEntries(): Promise<EntryListItem[]> {
@@ -45,6 +45,52 @@ export async function setPrimaryDefinition(payload: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ primaryDefinitionId: payload.definitionId }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+  return data.data;
+}
+
+type EditEntryPayload = z.infer<typeof EditEntrySchema>;
+type CompleteCreateEntryPayload = {
+  entryId: string;
+  payload: EditEntryPayload;
+};
+
+export async function updateEntry(
+  payload: CompleteCreateEntryPayload,
+): Promise<Entry> {
+  const { entryId, payload: formPayload } = payload;
+  const response = await fetch(`/api/entries/${entryId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formPayload),
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+  return data.data;
+}
+
+export async function deleteEntry(
+  id: string,
+): Promise<{ id: string; term: string }> {
+  const response = await fetch(`/api/entries/${id}`, {
+    method: "DELETE",
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message);
+  return data.data;
+}
+
+export async function restoreEntry(
+  entryId: string,
+): Promise<{ id: string; term: string }> {
+  const response = await fetch(`/api/entries/${entryId}/restore`, {
+    method: "PATCH",
   });
 
   const data = await response.json();

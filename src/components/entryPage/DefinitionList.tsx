@@ -11,6 +11,7 @@ import { DefinitionCard } from "./DefinitionCard";
 import { Button } from "../ui/button";
 import { ResponsiveDialog } from "../ResponsiveDialog";
 import { DefinitionDrawerContent } from "./DefinitionDrawerContent";
+import { EmptyStateCard } from "../EmptyStateCard";
 
 interface DefinitionListProps {
   entry: EntryDetail;
@@ -88,6 +89,14 @@ export const DefinitionList = ({ entry }: DefinitionListProps) => {
               exit="exit"
               className="space-y-2"
             >
+              {entry.definitions.length == 0 && (
+                <EmptyStateCard
+                  action={handleOpenCreate}
+                  actionText="Criar primeira definição"
+                  description="Crie uma definição para mostrar significados e dar maiores explicações sobre esta entrada!"
+                  title="Esta entrada está incompleta!"
+                />
+              )}
               {definitionDisplayList.map((def) => (
                 <motion.div
                   key={def.id}
@@ -109,9 +118,8 @@ export const DefinitionList = ({ entry }: DefinitionListProps) => {
       <ResponsiveDialog
         onOpenChange={setIsDrawerOpen}
         open={isDrawerOpen}
-        title=""
+        title={!!selectedDefinition ? "Ver definição" : "Criar definição"}
       >
-        <p>{!!selectedDefinition ? "Ver definição" : "Criar definição"}</p>
         <DefinitionDrawerContent
           onClose={handleCloseDrawer}
           entry={entry}

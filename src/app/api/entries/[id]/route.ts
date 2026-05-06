@@ -6,10 +6,11 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import z from "zod";
 import { Prisma } from "@/generated/prisma/client";
+import { EditEntrySchema } from "@/validation/entrySchemas";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   //check if user is logged in
   const user = await getSessionUser();
@@ -52,17 +53,9 @@ export async function GET(
   }
 }
 
-const EditEntrySchema = z.object({
-  term: z.string().min(1).trim().optional(),
-  notes: z.string().optional(),
-  form: z.enum(EntryForm).optional(),
-  tags: z.array(z.string()).optional(),
-  primaryDefinitionId: z.string().optional(),
-});
-
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   //1 - Check user
   const user = await getSessionUser();
@@ -98,7 +91,7 @@ export async function PATCH(
     //Check if definition belongs to the target entry
     if (data.primaryDefinitionId) {
       const belongs = entry.definitions.some(
-        (def) => def.id === data.primaryDefinitionId
+        (def) => def.id === data.primaryDefinitionId,
       );
       if (!belongs)
         return ApiError.badRequest("definition-doesnt-belong-to-entry");
@@ -170,7 +163,7 @@ export async function PATCH(
 //SOFT DELETE AN ENTRY
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const user = await getSessionUser();
   if (!user) return ApiError.unauthorized();

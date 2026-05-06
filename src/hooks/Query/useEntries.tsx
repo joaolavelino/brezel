@@ -1,9 +1,12 @@
 import { queryKeys } from "@/constants/queryKeys";
 import {
   createEntry,
+  deleteEntry,
   getEntries,
   getEntry,
+  restoreEntry,
   setPrimaryDefinition,
+  updateEntry,
 } from "@/services/entries";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -40,6 +43,45 @@ export function useSetPrimaryDefinition(entryId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.entries.detail(entryId),
+      });
+    },
+  });
+}
+
+export function useUpdateEntry(entryId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: queryKeys.entries.detail(entryId),
+    mutationFn: updateEntry,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.entries.detail(entryId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.entries.all,
+      });
+    },
+  });
+}
+
+export function useDeleteEntry() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteEntry,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.entries.all,
+      });
+    },
+  });
+}
+export function useRestoreEntry() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: restoreEntry,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.entries.all,
       });
     },
   });

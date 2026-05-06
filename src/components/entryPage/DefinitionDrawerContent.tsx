@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardTitle } from "../ui/card";
 import { DefinitionDisplayCard } from "./DefinitionDisplayCard";
 import { ExampleCard } from "./ExampleCard";
+import { EmptyStateCard } from "../EmptyStateCard";
 
 interface DefinitionDrawerContentProps {
   definition: CompleteDefinition | null;
@@ -208,19 +209,12 @@ export const DefinitionDrawerContent = ({
             </Button>
           </header>
           {!showExampleForm && hasNoExamples && (
-            <div className="w-full p-4 border-2 border-primary-muted rounded-md mt-2 flex flex-col items-center gap-4">
-              <div className="p-3 bg-primary-muted rounded-full w-fit">
-                <AlertTriangle size={20} className="text-primary " />
-              </div>
-              <p>Nenhum exemplo foi encontrado!</p>
-              <Button
-                variant={"default"}
-                className="w-full rounded-full"
-                onClick={handleExampleCreateView}
-              >
-                Criar um exemplo
-              </Button>
-            </div>
+            <EmptyStateCard
+              title="Nenhum exemplo foi encontrado!"
+              description="Crie um exemplo para ajudar a entender a definição."
+              action={handleExampleCreateView}
+              actionText="Criar um exemplo"
+            />
           )}
           {showExampleForm ? (
             <Card className="p-4 gap-2 mt-2">
