@@ -21,7 +21,7 @@ export function CaptureContent({
   const [createdEntry, setCreatedEntry] = useState<{
     term: string;
     id: string;
-  } | null>({ term: "Netzwerk", id: "cmmfcevsu0005788zzy72ybku" });
+  } | null>(null);
 
   const handleCreateSuccess = (entry: Entry) =>
     setCreatedEntry({ id: entry.id, term: entry.term });
@@ -82,7 +82,10 @@ export function CaptureContent({
                   className="flex flex-col mb-2  min-h-135 justify-end w-full"
                 >
                   <CaptureForm
-                    handleSuccess={(entry: Entry) => handleCreateSuccess(entry)}
+                    handleCreateSuccess={(entry: Entry) =>
+                      handleCreateSuccess(entry)
+                    }
+                    entry={null}
                   />
                 </motion.div>
                 <Button

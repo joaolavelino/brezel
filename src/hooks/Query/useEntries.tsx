@@ -51,7 +51,6 @@ export function useSetPrimaryDefinition(entryId: string) {
 export function useUpdateEntry(entryId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: queryKeys.entries.detail(entryId),
     mutationFn: updateEntry,
     onSuccess: () => {
       queryClient.invalidateQueries({

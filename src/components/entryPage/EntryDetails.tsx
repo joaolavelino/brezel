@@ -122,7 +122,10 @@ export const EntryDetails = ({ id }: EntryDetailsProps) => {
         title="Editar entrada"
         description="Edite as informações da entrada"
       >
-        <CaptureForm handleSuccess={() => setIsEditOpen(false)} />
+        <CaptureForm
+          handleEditSuccess={() => setIsEditOpen(false)}
+          entry={entry}
+        />
       </ResponsiveDialog>
     </div>
   );

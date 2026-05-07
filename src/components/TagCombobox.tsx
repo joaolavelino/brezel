@@ -19,9 +19,14 @@ import { useGetTags } from "@/hooks/Query/useTags";
 interface TagComboboxProps {
   value: Tag[];
   onChange: (tags: Tag[]) => void;
+  isEdit?: boolean;
 }
 
-export function TagCombobox({ onChange, value }: TagComboboxProps) {
+export function TagCombobox({
+  onChange,
+  value,
+  isEdit = false,
+}: TagComboboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -84,10 +89,11 @@ export function TagCombobox({ onChange, value }: TagComboboxProps) {
         </AnimatePresence>
       </motion.div>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger className="w-full" asChild>
           <Button
             disabled={isMaxReached}
-            className="w-full flex justify-between bg-primary-muted text-text-fixed-dark"
+            type={"button"}
+            className={`font-normal w-full flex justify-between ${!isEdit ? "bg-primary-muted" : "bg-transparent"} text-text-fixed-dark border border-input`}
           >
             Escolha {!isOpen ? <ChevronDown /> : <ChevronUp />}
           </Button>

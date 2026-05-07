@@ -2,13 +2,21 @@ import { entryFormLabels } from "@/constants/entries";
 
 import { Entry, Prisma } from "@/generated/prisma/client";
 import { EntryForm } from "@/generated/prisma/enums";
+import {
+  useCreateEntry,
+  useGetEntries,
+  useUpdateEntry,
+} from "@/hooks/Query/useEntries";
 import { useDebouncer } from "@/hooks/useDebouncer";
 import { normalizeTerm } from "@/lib/normalize-term";
+import { CompleteCreateEntryPayload } from "@/services/entries";
+import { EntryDetail } from "@/types/entries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 import { FieldWrapper } from "../FieldWrapper";
 import { TagCombobox } from "../TagCombobox";
@@ -32,8 +40,6 @@ import {
   SheetTitle,
 } from "../ui/sheet";
 import { Textarea } from "../ui/textarea";
-import { useCreateEntry, useGetEntries } from "@/hooks/Query/useEntries";
-import { toast } from "sonner";
 
 const CreateEntrySchema = z.object({
   term: z.string().min(1, "Este campo não pode ser vazio").trim(),
@@ -54,25 +60,32 @@ type EntryWithRelations = Prisma.EntryGetPayload<{
 }>;
 
 interface CaptureFormProps {
-  handleSuccess: (entry: Entry) => void;
+  handleCreateSuccess?: (entry: Entry) => void;
+  handleEditSuccess?: () => void;
+  entry: EntryDetail | null;
 }
 
-export function CaptureForm({ handleSuccess }: CaptureFormProps) {
+export function CaptureForm({
+  handleCreateSuccess,
+  handleEditSuccess,
+  entry = null,
+}: CaptureFormProps) {
   const [duplicateEntry, setDuplicateEntry] =
     useState<EntryWithRelations | null>(null);
   const { control, register, handleSubmit, watch, formState } =
     useForm<CaptureFormDataType>({
       resolver: zodResolver(CreateEntrySchema),
       defaultValues: {
-        term: "",
-        notes: "",
-        tags: [],
+        term: entry?.term ?? "",
+        notes: entry?.notes ?? "",
+        tags: entry?.entryTags.map((et) => et.tag) ?? [],
       },
     });
   const { errors, isSubmitting } = formState;
 
   const { data: entries = [] } = useGetEntries();
   const { mutate: createEntry, isPending } = useCreateEntry();
+  const { mutate: updateEntry } = useUpdateEntry(entry?.id || "");
 
   const termValue = watch("term");
 
@@ -81,7 +94,9 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
   useEffect(() => {
     if (debouncedTerm.length === 0) return;
     const duplicate = entries.find(
-      (el) => el.termNormalized === normalizeTerm(debouncedTerm),
+      (el) =>
+        el.termNormalized === normalizeTerm(debouncedTerm) &&
+        el.id !== entry?.id,
     );
 
     if (duplicate) {
@@ -89,22 +104,40 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
     } else {
       setDuplicateEntry(null);
     }
-  }, [debouncedTerm, entries]);
+  }, [debouncedTerm, entries, entry]);
 
   const onSubmit = (data: CaptureFormDataType) => {
     console.log(data, errors);
     const tagsIds = data.tags.map((tag) => tag.id);
-    const payload = { ...data, tags: tagsIds };
-    createEntry(payload, {
-      onError: (error) => {
-        const message =
-          error.message === "Failed to fetch"
-            ? "Sem conexão. Verifique a sua rede de internet e tente novamente."
-            : error.message;
-        toast.error(message);
-      },
-      onSuccess: handleSuccess,
-    });
+
+    if (!!entry) {
+      const updatePayload: CompleteCreateEntryPayload = {
+        entryId: entry.id,
+        payload: { ...data, tags: data.tags.map((tag) => tag.id) },
+      };
+      updateEntry(updatePayload, {
+        onError: (error) => {
+          const message =
+            error.message === "Failed to fetch"
+              ? "Sem conexão. Verifique a sua rede de internet e tente novamente."
+              : error.message;
+          toast.error(message);
+        },
+        onSuccess: handleEditSuccess,
+      });
+    } else {
+      const createPayload = { ...data, tags: tagsIds };
+      createEntry(createPayload, {
+        onError: (error) => {
+          const message =
+            error.message === "Failed to fetch"
+              ? "Sem conexão. Verifique a sua rede de internet e tente novamente."
+              : error.message;
+          toast.error(message);
+        },
+        onSuccess: handleCreateSuccess,
+      });
+    }
   };
 
   return (
@@ -119,7 +152,11 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
             name="tags"
             control={control}
             render={({ field }) => (
-              <TagCombobox value={field.value} onChange={field.onChange} />
+              <TagCombobox
+                value={field.value}
+                onChange={field.onChange}
+                isEdit={!!entry}
+              />
             )}
           />
         </FieldWrapper>
@@ -130,7 +167,7 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
           errorMessage={errors.term?.message}
         >
           <Input
-            className="bg-primary-muted text-text-fixed-dark"
+            className={`${!entry && "bg-primary-muted"} text-text-fixed-dark`}
             placeholder="O que você quer salvar hoje?"
             {...register("term")}
           />
@@ -145,7 +182,9 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
             control={control}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="w-full bg-primary-muted text-text-fixed-dark">
+                <SelectTrigger
+                  className={`w-full ${!entry && "bg-primary-muted"} text-text-fixed-dark`}
+                >
                   <SelectValue placeholder="Escolha um formato" />
                 </SelectTrigger>
                 <SelectContent className="bg-surface-subtle">
@@ -169,17 +208,18 @@ export function CaptureForm({ handleSuccess }: CaptureFormProps) {
         >
           <Textarea
             placeholder="Conte um pouco mais sobre esse termo..."
-            className="bg-primary-muted text-text-fixed-dark min-h-20 w-full"
+            className={`${!entry && "bg-primary-muted"} text-text-fixed-dark min-h-20 w-full`}
             rows={5}
             {...register("notes")}
           />
         </FieldWrapper>
         <Button
           type="submit"
-          className="bg-primary-muted text-primary w-full rounded-full mt-20"
+          variant={"secondary"}
+          className={`${!entry && "bg-primary-muted"}text-primary w-full rounded-full mt-20`}
           style={{ fontWeight: "bold" }}
           onClick={() => console.log("button is clicked", isPending)}
-          disabled={isPending}
+          disabled={isSubmitting}
         >
           Salvar entrada
         </Button>

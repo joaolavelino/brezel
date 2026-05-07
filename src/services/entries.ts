@@ -53,7 +53,7 @@ export async function setPrimaryDefinition(payload: {
 }
 
 type EditEntryPayload = z.infer<typeof EditEntrySchema>;
-type CompleteCreateEntryPayload = {
+export type CompleteCreateEntryPayload = {
   entryId: string;
   payload: EditEntryPayload;
 };

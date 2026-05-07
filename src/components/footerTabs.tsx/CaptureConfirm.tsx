@@ -20,18 +20,12 @@ export const CaptureConfirm = ({
   const entry = useMemo(() => {
     if (!entryId) return undefined;
     const foundEntry = entries.find((el) => el.id === entryId);
-    if (!foundEntry) {
-      handleClose();
-    }
-
     return foundEntry;
-  }, [entryId, entries, handleClose]);
+  }, [entryId, entries]);
 
   if (!entry) {
-    handleClose();
     return null;
   }
-
   //AFTER HERE I DON'T WANT TO NEED TO ALWAYS CHECK THAT THERE'S NO ENTRY... AND SINCE ENTRY.DEFINITIONS IS ALWAYS AN ARRAY, THAT THE FILTERED DEFINITIONS ARE NEVER UNDEFINED
 
   return (
