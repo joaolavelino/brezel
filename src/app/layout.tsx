@@ -3,7 +3,9 @@ import "./globals.css";
 import { Inter, Inika } from "next/font/google";
 import { Gentium_Book_Plus } from "next/font/google";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Toaster } from "sonner";
+import { Header } from "@/components/header/Header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,13 +37,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${inika.variable} ${gentium.variable}`}
     >
       <body>
-        <QueryProvider>
-          <Toaster position="top-right" />
-          {children}
-        </QueryProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <Toaster position="top-right" />
+            <Header />
+            {children}
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
