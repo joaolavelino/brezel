@@ -15,6 +15,8 @@ import { STAGGER_LIST_VARIANTS } from "@/lib/animations";
 import { NavItems } from "./NavItems";
 import { ProfileDisplay } from "./ProfileDisplay";
 import { Switch } from "../ui/switch";
+import { SwitchBrand } from "../ui/switchBrand";
+import { useRouter } from "next/navigation";
 
 const subscribeToNothing = () => () => {};
 
@@ -31,10 +33,11 @@ export const Header = () => {
   const mounted = useClientMounted();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const router = useRouter();
   return (
     <>
-      <header className="fixed top-0 w-full p-2 px-8 pt-12 bg-brand-surface rounded-b-2xl flex justify-between">
-        <h1>
+      <header className="fixed top-0 w-full p-3 px-8 pt-12  bg-brand-surface rounded-b-2xl flex justify-between items-center">
+        <h1 onClick={() => router.push("/")}>
           <Image src={headerLogo} alt="Logo do brezel" />
         </h1>
         <Button
@@ -50,8 +53,9 @@ export const Header = () => {
         <SheetContent
           className="p-6 py-12 !h-[100%] bg-brand-surface h-full border-2 flex flex-col justify-between"
           side="top"
+          showCloseButton={false}
         >
-          <SheetTitle className="flex justify-between">
+          <SheetTitle className="flex justify-between items-center p-1">
             <div>
               <Image src={headerLogo} alt="Logo do brezel" />
             </div>
@@ -73,7 +77,7 @@ export const Header = () => {
               animate="open"
               exit="closed"
               variants={STAGGER_LIST_VARIANTS}
-              className="space-y-2s"
+              className="space-y-2"
             >
               <NavItems />
             </motion.ul>
@@ -81,12 +85,13 @@ export const Header = () => {
               <span className="text-sm text-brand-foreground">
                 {resolvedTheme == "dark" ? <Moon /> : <Sun />}
               </span>
-              <Switch
+              <SwitchBrand
                 checked={mounted ? resolvedTheme === "dark" : false}
                 onCheckedChange={(on) => setTheme(on ? "dark" : "light")}
                 disabled={!mounted}
                 aria-label="Alternar tema escuro"
                 className="bg-brand-surface"
+                size="lg"
               />
             </div>
             <div className="flex flex-col space-y-4 mt-8">
