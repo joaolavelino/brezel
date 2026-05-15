@@ -34,7 +34,15 @@ export const Greeting = ({}) => {
       <p className=" text-6xl text-secondary font-semibold font-brand mb-4">
         {greeting.greeting}
       </p>
-      {!isAlreadyAdded && (
+      {entries && entries.length < 10 && (
+        <div className="w-full border-2 border-primary h-8 rounded-full overflow-hidden">
+          <div
+            className="bg-primary h-full"
+            style={{ width: `${Math.min((entries?.length || 0) * 10, 100)}%` }}
+          />
+        </div>
+      )}
+      {!isAlreadyAdded && entries && entries?.length >= 10 && (
         <Button
           size={"xs"}
           variant={"outline"}
