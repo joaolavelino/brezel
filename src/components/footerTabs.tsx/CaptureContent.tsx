@@ -60,19 +60,7 @@ export function CaptureContent({
           )}
         </>
       ) : (
-        <div className="flex flex-col justify-between min-h-full w-full items-start px-8 py-4">
-          <div className="flex items-center gap-4">
-            <div>
-              <Image
-                width={24}
-                height={24}
-                src={"/Brezel.svg"}
-                alt="Brezel image"
-                className="object-contain "
-              />
-            </div>
-            <h1 className="font-brand font-bold text-2xl">Brezel</h1>
-          </div>
+        <div className="flex flex-col justify-end min-h-full w-full items-start px-8 py-4">
           <AnimatePresence>
             {!createdEntry ? (
               <motion.div layout className="flex flex-col items-start w-full">

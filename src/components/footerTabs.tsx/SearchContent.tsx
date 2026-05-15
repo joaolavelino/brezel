@@ -50,7 +50,9 @@ export function SearchContent({
   return (
     <>
       {!isCaptureMode && (
-        <div className="flex gap-4 items-center pt-2">
+        <div
+          className={`flex gap-4 items-center ${isSearchMode ? "pt-40" : "pt-2"}`}
+        >
           <Input
             className="rounded-full text-center"
             placeholder="Busca"
