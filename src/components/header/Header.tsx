@@ -36,7 +36,7 @@ export const Header = () => {
   const router = useRouter();
   return (
     <>
-      <header className="fixed top-0 w-full p-3 px-8 pt-12  bg-brand-surface rounded-b-2xl flex justify-between items-center">
+      <header className="fixed top-0 w-full p-3 px-8 pt-12  bg-brand-surface rounded-b-2xl flex justify-between items-center z-10">
         <h1 onClick={() => router.push("/")}>
           <Image src={headerLogo} alt="Logo do brezel" />
         </h1>

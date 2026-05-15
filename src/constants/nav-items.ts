@@ -17,7 +17,7 @@ interface NavItem {
 export const MENU_ITEMS: NavItem[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Sobre", href: "/about", icon: Info },
-  { label: "Biblioteca", href: "/library", icon: Library },
+  // { label: "Biblioteca", href: "/library", icon: Library },
   { label: "Restaurar Entrada", href: "/restore", icon: RefreshCw },
   //   {
   //     label: "Exportar",

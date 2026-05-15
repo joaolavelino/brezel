@@ -8,7 +8,7 @@ interface EntryPageProps {
 const EntryPage = async ({ params }: EntryPageProps) => {
   const { id } = await params;
   return (
-    <main className="flex flex-col min-h-screen pt-15">
+    <main className="flex flex-col min-h-screen mt-30  ">
       <EntryDetails id={id} />
       <FooterTabs />
     </main>

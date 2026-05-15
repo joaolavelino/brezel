@@ -1,4 +1,28 @@
-export const greetings = [
+import { EntryForm, NounArticle, PartOfSpeech } from "@/generated/prisma/enums";
+import { MultilingualText } from "@/lib/resolve-language";
+
+export type GreetingEntry = {
+  term: string;
+  form: EntryForm;
+  notes: MultilingualText;
+  definition: {
+    translation: MultilingualText;
+    partOfSpeech: PartOfSpeech;
+    nounArticle?: NounArticle;
+    notes: MultilingualText;
+  };
+  example: {
+    text: string;
+    notes: MultilingualText;
+  };
+};
+
+export type Greeting = {
+  greeting: string;
+  entry: GreetingEntry;
+};
+
+export const greetings: Greeting[] = [
   {
     greeting: "Ein Wort am Tag hält die Vergessenheit weg.",
     entry: {
@@ -9,7 +33,10 @@ export const greetings = [
         en: "Oblivion — from 'vergessen' (to forget). The state of being completely forgotten.",
       },
       definition: {
-        translation: "oblivion / forgetfulness",
+        translation: {
+          pt: "esquecimento / oblívio",
+          en: "oblivion / forgetfulness",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -36,7 +63,10 @@ export const greetings = [
         en: "Longing for distant places — the opposite of Heimweh (homesickness).",
       },
       definition: {
-        translation: "wanderlust / longing for faraway places",
+        translation: {
+          pt: "saudade de viajar / desejo de ver o mundo",
+          en: "wanderlust / longing for faraway places",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -63,7 +93,10 @@ export const greetings = [
         en: "Panic of missed opportunities as time runs out — literally 'gate-closing panic'.",
       },
       definition: {
-        translation: "last-minute panic / fear of missing out",
+        translation: {
+          pt: "pânico da última hora / medo de ficar para trás",
+          en: "last-minute panic / fear of missing out",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -90,7 +123,10 @@ export const greetings = [
         en: "The joy of anticipating something good — literally 'pre-joy'.",
       },
       definition: {
-        translation: "anticipatory joy / excited anticipation",
+        translation: {
+          pt: "alegria da antecipação / prazer da expectativa",
+          en: "anticipatory joy / excited anticipation",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -117,7 +153,10 @@ export const greetings = [
         en: "So, what's new? — very common in casual German conversation.",
       },
       definition: {
-        translation: "So, what's new? / What's up?",
+        translation: {
+          pt: "E aí, novidades? / O que há de novo?",
+          en: "So, what's new? / What's up?",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "'Na' é uma partícula modal informal sem tradução direta. 'gibt's' é contração de 'gibt es'.",
@@ -143,7 +182,10 @@ export const greetings = [
         en: "Let's go! — expression of encouragement to start something.",
       },
       definition: {
-        translation: "Let's go! / Here we go!",
+        translation: {
+          pt: "Vamos lá! / Bora!",
+          en: "Let's go! / Here we go!",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "De 'auf' (para cima/para frente) + 'geht's' (vai). Usado para animar e motivar.",
@@ -169,7 +211,10 @@ export const greetings = [
         en: "A song stuck in your head — literally 'ear worm'.",
       },
       definition: {
-        translation: "earworm / catchy tune stuck in your head",
+        translation: {
+          pt: "música chiclete / música que não sai da cabeça",
+          en: "earworm / catchy tune stuck in your head",
+        },
         partOfSpeech: "noun",
         nounArticle: "der",
         notes: {
@@ -187,7 +232,7 @@ export const greetings = [
     },
   },
   {
-    greeting: "Verschlimmbessern wir das heute nicht.",
+    greeting: "Verschlimmbessern wir das heute não.",
     entry: {
       term: "verschlimmbessern",
       form: "word",
@@ -196,7 +241,10 @@ export const greetings = [
         en: "To make something worse while trying to improve it — one word for that specific feeling.",
       },
       definition: {
-        translation: "to make something worse while trying to improve it",
+        translation: {
+          pt: "piorar ao tentar consertar / o famoso 'estragar de vez'",
+          en: "to make something worse while trying to improve it",
+        },
         partOfSpeech: "verb",
         notes: {
           pt: "Mistura de 'verschlimmern' (piorar) + 'verbessern' (melhorar). Um verbo portmanteau.",
@@ -222,7 +270,10 @@ export const greetings = [
         en: "Sensitivity and tact for delicate situations — literally 'fingertip feeling'.",
       },
       definition: {
-        translation: "tact / sensitivity / delicate touch",
+        translation: {
+          pt: "tato / sensibilidade / jogo de cintura",
+          en: "tact / sensitivity / delicate touch",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -249,7 +300,10 @@ export const greetings = [
         en: "World-weariness — pain caused by comparing the world as it is to how it should be.",
       },
       definition: {
-        translation: "world-weariness / pain caused by the state of the world",
+        translation: {
+          pt: "angústia existencial / dor do mundo",
+          en: "world-weariness / pain caused by the state of the world",
+        },
         partOfSpeech: "noun",
         nounArticle: "der",
         notes: {
@@ -276,8 +330,10 @@ export const greetings = [
         en: "Head cinema — when you play out elaborate scenarios in your mind.",
       },
       definition: {
-        translation:
-          "mental cinema / imagining elaborate scenarios in your head",
+        translation: {
+          pt: "cinema mental / criar paranoia ou filmes na cabeça",
+          en: "mental cinema / imagining elaborate scenarios in your head",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -304,7 +360,10 @@ export const greetings = [
         en: "Cosiness, warmth and good company — a state of comfort and belonging.",
       },
       definition: {
-        translation: "cosiness / warmth / convivial comfort",
+        translation: {
+          pt: "aconchego / conforto / bem-estar social",
+          en: "cosiness / warmth / convivial comfort",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -331,7 +390,10 @@ export const greetings = [
         en: "Pleasure derived from someone else's misfortune — one of the most famous German exports.",
       },
       definition: {
-        translation: "pleasure derived from others' misfortune",
+        translation: {
+          pt: "prazer no azar alheio",
+          en: "pleasure derived from others' misfortune",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -358,7 +420,10 @@ export const greetings = [
         en: "The perfect comeback that only comes to you afterwards — literally 'staircase joke'.",
       },
       definition: {
-        translation: "belated comeback / the perfect reply that comes too late",
+        translation: {
+          pt: "resposta tardia / a resposta perfeita que vem tarde demais",
+          en: "belated comeback / the perfect reply that comes too late",
+        },
         partOfSpeech: "noun",
         nounArticle: "der",
         notes: {
@@ -385,7 +450,10 @@ export const greetings = [
         en: "The joy of discovering something new — from 'entdecken' (to discover) + 'Freude' (joy).",
       },
       definition: {
-        translation: "joy of discovery / explorer's delight",
+        translation: {
+          pt: "alegria da descoberta / prazer de explorar",
+          en: "joy of discovery / explorer's delight",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -412,7 +480,10 @@ export const greetings = [
         en: "So what? — casual and slightly dismissive when something doesn't impress you.",
       },
       definition: {
-        translation: "So what? / And?",
+        translation: {
+          pt: "E daí? / O que que tem?",
+          en: "So what? / And?",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "Tom depende muito da entonação — pode ser curiosidade genuína ou dismissão total.",
@@ -438,7 +509,10 @@ export const greetings = [
         en: "Diligent, hardworking — a common compliment for someone who works with dedication.",
       },
       definition: {
-        translation: "diligent / hardworking / industrious",
+        translation: {
+          pt: "esforçado / diligente / trabalhador",
+          en: "diligent / hardworking / industrious",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "Adjetivo muito usado em contexto escolar e profissional. 'Fleißig wie eine Biene' — trabalhador como uma abelha.",
@@ -464,7 +538,10 @@ export const greetings = [
         en: "The effort of overcoming internal resistance to do something difficult.",
       },
       definition: {
-        translation: "overcoming / effort to push through inner resistance",
+        translation: {
+          pt: "superação / esforço de vontade",
+          en: "overcoming / effort to push through inner resistance",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -491,7 +568,10 @@ export const greetings = [
         en: "The joy of learning — from 'lernen' (to learn) + 'Freude' (joy).",
       },
       definition: {
-        translation: "joy of learning / love of learning",
+        translation: {
+          pt: "alegria de aprender / amor ao estudo",
+          en: "joy of learning / love of learning",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -518,7 +598,10 @@ export const greetings = [
         en: "Inner life — a person's internal emotional and psychological world.",
       },
       definition: {
-        translation: "inner life / inner world",
+        translation: {
+          pt: "vida interior / mundo interno",
+          en: "inner life / inner world",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -545,7 +628,10 @@ export const greetings = [
         en: "A peace offering gift given to a partner after an argument — literally 'dragon food'.",
       },
       definition: {
-        translation: "peace offering / guilt gift for a partner",
+        translation: {
+          pt: "mimo de desculpas / presente de reconciliação",
+          en: "peace offering / guilt gift for a partner",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -572,7 +658,10 @@ export const greetings = [
         en: "Snuggly, cosy, perfect for a cuddle — from 'kuscheln' (to snuggle).",
       },
       definition: {
-        translation: "snuggly / cosy / cuddly",
+        translation: {
+          pt: "aconchegante / fofinho",
+          en: "snuggly / cosy / cuddly",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "Adjetivo derivado de 'kuscheln' (aconchegar, abraçar). Tom sempre positivo e carinhoso.",
@@ -598,7 +687,10 @@ export const greetings = [
         en: "Between seasons — that in-between period when one season ends and another hasn't quite begun.",
       },
       definition: {
-        translation: "off-season / between seasons",
+        translation: {
+          pt: "meia-estação / entre-temporada",
+          en: "off-season / between seasons",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -625,7 +717,10 @@ export const greetings = [
         en: "The final high school exam in Germany — the gateway to university.",
       },
       definition: {
-        translation: "German high school graduation exam",
+        translation: {
+          pt: "diploma de conclusão do ensino médio (exame final)",
+          en: "German high school graduation exam",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -652,7 +747,10 @@ export const greetings = [
         en: "Everything's fine, all good — informal and upbeat expression. 'Paletti' doesn't exist outside this phrase.",
       },
       definition: {
-        translation: "Everything's fine! / All good!",
+        translation: {
+          pt: "Tudo certo! / Tudo em cima!",
+          en: "Everything's fine! / All good!",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "Origem incerta — possivelmente do italiano 'paletti' (estakinhas, tudo no lugar). Uso totalmente informal.",
@@ -678,7 +776,10 @@ export const greetings = [
         en: "A moment of happiness — from 'Glück' (happiness/luck) + 'Moment' (moment).",
       },
       definition: {
-        translation: "moment of happiness / lucky moment",
+        translation: {
+          pt: "momento de felicidade",
+          en: "moment of happiness / lucky moment",
+        },
         partOfSpeech: "noun",
         nounArticle: "der",
         notes: {
@@ -705,7 +806,10 @@ export const greetings = [
         en: "Someone who wakes up grumpy and needs time to get going — literally 'morning grump'.",
       },
       definition: {
-        translation: "morning grouch / someone who hates mornings",
+        translation: {
+          pt: "resmungão matinal / pessoa que não é 'da manhã'",
+          en: "morning grouch / someone who hates mornings",
+        },
         partOfSpeech: "noun",
         nounArticle: "der",
         notes: {
@@ -728,11 +832,14 @@ export const greetings = [
       term: "Stichwort",
       form: "word",
       notes: {
-        pt: "Palavra-chave, deixa, ponto de partida — muito usado em teatro para a deixa de um ator.",
+        pt: "Palavra-chave, deixa, ponto de partida — muito usado em teatro para a deixa de um actor.",
         en: "Keyword, cue, starting point — widely used in theatre for an actor's cue.",
       },
       definition: {
-        translation: "keyword / cue / prompt",
+        translation: {
+          pt: "palavra-chave / deixa / tópico",
+          en: "keyword / cue / prompt",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -759,7 +866,10 @@ export const greetings = [
         en: "To put something on hold, postpone indefinitely — literally 'to put on ice'.",
       },
       definition: {
-        translation: "to put on ice / to shelve / to postpone indefinitely",
+        translation: {
+          pt: "engavetar / colocar em espera",
+          en: "to put on ice / to shelve / to postpone indefinitely",
+        },
         partOfSpeech: "verb",
         notes: {
           pt: "Expressão idiomática. O projeto foi posto no gelo = ninguém fala mais nele.",
@@ -785,8 +895,10 @@ export const greetings = [
         en: "To lose the thread, to lose track of what you were saying — literally 'to lose the thread'.",
       },
       definition: {
-        translation:
-          "to lose the thread / to lose track of what you were saying",
+        translation: {
+          pt: "perder o fio da meada",
+          en: "to lose the thread / to lose track of what you were saying",
+        },
         partOfSpeech: "verb",
         notes: {
           pt: "De 'Faden' (fio) + 'verlieren' (perder). Referência ao fio de Ariadne no labirinto.",
@@ -812,7 +924,10 @@ export const greetings = [
         en: "Chin up! — expression of encouragement when someone is feeling down.",
       },
       definition: {
-        translation: "Chin up! / Keep your head up!",
+        translation: {
+          pt: "Bola para frente! / Cabeça erguida!",
+          en: "Chin up! / Keep your head up!",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "De 'Kopf' (cabeça) + 'hoch' (alto/erguida). Tom sempre encorajador e solidário.",
@@ -838,7 +953,10 @@ export const greetings = [
         en: "How's it going? How are things? — informal, colloquial version of 'Wie geht es dir?'.",
       },
       definition: {
-        translation: "How's it going? / How are things?",
+        translation: {
+          pt: "Como estão as coisas? / Como vai?",
+          en: "How's it going? / How are things?",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "Contração de 'Wie läuft es?' — usa 'laufen' no sentido de 'funcionar/correr'. Tom descontraído.",
@@ -864,7 +982,10 @@ export const greetings = [
         en: "Unexpectedly — a typically long German adverb to express surprise.",
       },
       definition: {
-        translation: "unexpectedly / surprisingly",
+        translation: {
+          pt: "inesperadamente / por surpresa",
+          en: "unexpectedly / surprisingly",
+        },
         partOfSpeech: "other",
         notes: {
           pt: "De 'unerwartet' (inesperado) + '-weise' (sufixo de advérbio de modo). Alemão adora esses advérbios longos.",
@@ -890,7 +1011,10 @@ export const greetings = [
         en: "Perseverance / staying power — literally 'capacity to hold through'.",
       },
       definition: {
-        translation: "perseverance / staying power / endurance",
+        translation: {
+          pt: "perseverança / resiliência / persistência",
+          en: "perseverance / staying power / endurance",
+        },
         partOfSpeech: "noun",
         nounArticle: "das",
         notes: {
@@ -917,7 +1041,10 @@ export const greetings = [
         en: "Mindfulness / attentiveness — being present and aware of the moment.",
       },
       definition: {
-        translation: "mindfulness / attentiveness / awareness",
+        translation: {
+          pt: "atenção plena / consciência do agora",
+          en: "mindfulness / attentiveness / awareness",
+        },
         partOfSpeech: "noun",
         nounArticle: "die",
         notes: {
@@ -933,9 +1060,5 @@ export const greetings = [
         },
       },
     },
-  },
-  {
-    greeting: "Die Wörter warten auf dich.",
-    entry: null,
   },
 ] as const;

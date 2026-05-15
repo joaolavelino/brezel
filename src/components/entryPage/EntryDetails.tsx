@@ -55,7 +55,7 @@ export const EntryDetails = ({ id }: EntryDetailsProps) => {
   };
 
   return (
-    <div className="p-4 max-h-164  overflow-scroll">
+    <div className="p-4 overflow-scroll">
       <div className="flex gap-2 relative">
         <div className="absolute top-[-8px] right-0">
           <Button
