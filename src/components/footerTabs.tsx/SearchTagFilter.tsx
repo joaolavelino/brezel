@@ -4,6 +4,8 @@ import { useState } from "react"; // Adicionamos estado interno
 import { motion, AnimatePresence, Transition } from "framer-motion";
 import { X, ChevronDown, ChevronUp, Tag } from "lucide-react";
 import { getContrastColor } from "@/lib/utils/getContrastColor";
+import Image from "next/image";
+import brezelIcon from "@/assets/brezel-icon.png";
 
 export type TagSearchItem = {
   id: string;
@@ -55,7 +57,7 @@ export function SearchTagFilter({
             }}
             transition={fastSpring}
             onClick={() => onSelectTag(null)}
-            className="flex justify-center items-center gap-2 rounded-md p-2 w-full font-bold shadow-sm text-[10px] leading-none"
+            className={`flex justify-center items-center gap-2 rounded-full p-2 w-full font-bold shadow-sm text-[14px] leading-none ${selectedTag.name == "Brezel" && "font-brand"}`}
             style={{
               backgroundColor: selectedTag.color ?? "var(--text-light)",
               color: selectedTag.color
@@ -85,14 +87,22 @@ export function SearchTagFilter({
                     transition={fastSpring}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => onSelectTag(tag.id)}
-                    className="flex gap-2 justify-center items-center rounded-md text-sm leading-none p-2 font-bold capitalize tracking-tight"
+                    className={`flex gap-2 justify-center items-center rounded-full text-sm leading-none p-2 font-bold capitalize tracking-tight ${tag.name == "Brezel" && "font-brand"}`}
                     style={{
                       backgroundColor: tag.color ?? "#555",
                       color: tag.color ? getContrastColor(tag.color) : "white",
                       fontSize: "14px",
                     }}
                   >
-                    <Tag size={14} />
+                    {tag.name == "Brezel" ? (
+                      <Image
+                        src={brezelIcon}
+                        alt="Brezel em forma de um B"
+                        height={14}
+                      />
+                    ) : (
+                      <Tag size={14} />
+                    )}
                     {tag.name}
                   </motion.button>
                 ))}
@@ -104,7 +114,7 @@ export function SearchTagFilter({
               <motion.button
                 layout
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full py-1 text-[9px] leading-none font-bold text-text-light flex items-center justify-center gap-1 rounded-md hover:bg-white/5 transition-colors"
+                className="w-full py-1 text-[9px] leading-none font-bold text-text-light flex items-center justify-center gap-1 rounded-full hover:bg-white/5 transition-colors"
                 style={{ fontSize: "12px" }}
               >
                 {isExpanded ? (
